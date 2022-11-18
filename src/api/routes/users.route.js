@@ -130,7 +130,7 @@ router.post('/get_user_info', UserController.getUserInfo);
 
 /**
  * @swagger
- * /it4788/get_user_info:
+ * /it4788/set_user_info:
  *   post:
  *     summary: Set user's info
  *     description: Set a user's info
