@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const PostController = require('../controllers/posts');
+const PostController = require('../controllers/posts.controller');
 
 router.get('/test-post', (req, res) => res.send({'test': 'post OK'}))
 
 /**
  * @swagger
- * /it4788/api/get_list_posts:
+ * /it4788/get_list_posts:
  *   post:
  *     summary: Get list of posts
  *     description: Get a list of posts
@@ -77,7 +77,7 @@ router.post('/get_list_posts', PostController.getListPosts);
 
 /**
  * @swagger
- * /it4788/api/get_post:
+ * /it4788/get_post:
  *   post:
  *     summary: 
  *     description: 
@@ -130,7 +130,7 @@ router.post('/get_post', PostController.getPost);
 
 /**
  * @swagger
- * /it4788/api/add_post:
+ * /it4788/add_post:
  *   post:
  *     summary: 
  *     description: 
@@ -182,7 +182,7 @@ router.post('/add_post', PostController.addPost);
 
 /**
  * @swagger
- * /it4788/api/edit_post:
+ * /it4788/edit_post:
  *   post:
  *     summary: 
  *     description: 
@@ -245,7 +245,7 @@ router.post('/edit_post', PostController.editPost);
 
 /**
  * @swagger
- * /it4788/api/delete_post:
+ * /it4788/delete_post:
  *   post:
  *     summary: Delete post
  *     description: Delete post
@@ -281,7 +281,7 @@ router.post('/delete_post', PostController.deletePost);
 
 /**
  * @swagger
- * /it4788/api/report_post:
+ * /it4788/report_post:
  *   post:
  *     summary: Report post
  *     description: Report a post
@@ -289,6 +289,7 @@ router.post('/delete_post', PostController.deletePost);
  *       - Post
  *     requestBody:
  *       description:
+ *       content:
  *         application/json:
  *           schema:
  *             type: object
@@ -297,6 +298,12 @@ router.post('/delete_post', PostController.deletePost);
  *                 type: string
  *                 required: true
  *               id:
+ *                 type: string
+ *                 required: true
+ *               subject:
+ *                 type: string
+ *                 required: true
+ *               details:
  *                 type: string
  *                 required: true
  *     responses:
@@ -316,7 +323,7 @@ router.post('/report_post', PostController.reportPost);
 
 /**
  * @swagger
- * /it4788/api/check_new_item:
+ * /it4788/check_new_item:
  *   post:
  *     summary: Check new item
  *     description: Check new item
@@ -358,7 +365,7 @@ router.post('/check_new_item', PostController.checkNewItem);
 
 /**
  * @swagger
- * /it4788/api/get_list_videos:
+ * /it4788/get_list_videos:
  *   post:
  *     summary: Get list videos
  *     description: Get list videos

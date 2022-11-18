@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const UserController = require('../controllers/users');
+const UserController = require('../controllers/users.controller');
 
 router.get('/test-user', (req, res) => res.send({'test': 'user OK'}));
 
 /**
  * @swagger
- * /it4788/api/get_user_friends:
+ * /it4788/get_user_friends:
  *   post:
  *     summary: Get user's friends
  *     description: Get a user's friends
@@ -67,7 +67,7 @@ router.post('/get_user_friends', UserController.getUserFriends);
 
 /**
  * @swagger
- * /it4788/api/get_user_info:
+ * /it4788/get_user_info:
  *   post:
  *     summary: Get user's info
  *     description: Get a user's info
@@ -130,7 +130,7 @@ router.post('/get_user_info', UserController.getUserInfo);
 
 /**
  * @swagger
- * /it4788/api/get_user_info:
+ * /it4788/get_user_info:
  *   post:
  *     summary: Set user's info
  *     description: Set a user's info
@@ -196,7 +196,7 @@ router.post('/set_user_info', UserController.setUserInfo);
 
 /**
  * @swagger
- * /it4788/api/get_list_blocks:
+ * /it4788/get_list_blocks:
  *   post:
  *     summary: Get list blocked users
  *     description: Get list blocked users
@@ -244,7 +244,7 @@ router.post('/get_list_blocks', UserController.getListBlocks);
 
 /**
  * @swagger
- * /it4788/api/set_block:
+ * /it4788/set_block:
  *   post:
  *     summary: Set block
  *     description: Set block
@@ -283,7 +283,7 @@ router.post('/set_block', UserController.setBlock);
 
 /**
  * @swagger
- * /it4788/api/set_accept_friend:
+ * /it4788/set_accept_friend:
  *   post:
  *     summary: Accept a friend request
  *     description: Accept a friend request
@@ -322,7 +322,7 @@ router.post('/set_accept_friend', UserController.setAcceptFriend);
 
 /**
  * @swagger
- * /it4788/api/get_requested_friends:
+ * /it4788/get_requested_friends:
  *   post:
  *     summary: Get requested friends
  *     description: Get requested friends
@@ -381,7 +381,7 @@ router.post('/get_requested_friends', UserController.getRequestedFriends);
 
 /**
  * @swagger
- * /it4788/api/set_request_friend:
+ * /it4788/set_request_friend:
  *   post:
  *     summary: Request to be friend
  *     description: Request to be friend
@@ -422,7 +422,7 @@ router.post('/set_request_friend', UserController.setRequestFriend);
 
 /**
  * @swagger
- * /it4788/api/get_list_suggested_friends:
+ * /it4788/get_list_suggested_friends:
  *   post:
  *     summary: Get list suggested friends
  *     description: Get list suggested friends

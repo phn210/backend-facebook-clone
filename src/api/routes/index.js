@@ -1,14 +1,14 @@
 const router = require('express').Router();
 
 const controllers = [
-    require('./auth'),
-    require('./chat'),
-    require('./comments'),
-    require('./likes'),
-    require('./notifications'),
-    require('./posts'),
-    require('./search'),
-    require('./users')
+    require('./auth.route'),
+    require('./chats.route'),
+    require('./comments.route'),
+    require('./likes.route'),
+    require('./notifications.route'),
+    require('./posts.route'),
+    require('./searches.route'),
+    require('./users.route')
 ];
 
 router.use('/', controllers);

@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const NotificationController = require('../controllers/notifications');
+const NotificationController = require('../controllers/notifications.controller');
 
 router.get('/test-notification', (req, res) => res.send({'test': 'notification OK'}));
 
 /**
  * @swagger
- * /it4788/api/get_notification:
+ * /it4788/get_notification:
  *   post:
  *     summary: Get notification
  *     description: Get notification
@@ -68,7 +68,7 @@ router.post('/get_notification', NotificationController.getNotification);
 
 /**
  * @swagger
- * /it4788/api/set_read_notification:
+ * /it4788/set_read_notification:
  *   post:
  *     summary: Set read notification
  *     description: Set read notification
@@ -111,7 +111,7 @@ router.post('/set_read_notification', NotificationController.setReadNotification
 
 /**
  * @swagger
- * /it4788/api/get_push_settings:
+ * /it4788/get_push_settings:
  *   post:
  *     summary: Get list suggested friends
  *     description: Get list suggested friends
@@ -169,7 +169,7 @@ router.post('/get_push_settings', NotificationController.getPushSettings);
 
 /**
  * @swagger
- * /it4788/api/set_push_settings:
+ * /it4788/set_push_settings:
  *   post:
  *     summary: Set list suggested friends
  *     description: Set list suggested friends
@@ -224,7 +224,7 @@ router.post('/set_push_settings', NotificationController.setPushSettings);
 
 /**
  * @swagger
- * /it4788/api/check_new_version:
+ * /it4788/check_new_version:
  *   post:
  *     summary: Check app new version
  *     description: Check app new version

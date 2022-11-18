@@ -18,7 +18,7 @@ app.use(compression());
 app.use(cors());
 app.use(morgan('dev'));
 app.use('/ping', (req, res) => {res.send({'status': 'alive'})})
-app.use(env.app.routePrefix ?? '/api', routes);
+app.use(env.app.routePrefix ?? '/', routes);
 if (env.swagger.enabled) {
     const options = {
         failOnErrors: true, // Whether or not to throw when parsing errors. Defaults to false.

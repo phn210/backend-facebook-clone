@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const AuthController = require('../controllers/auth');
+const AuthController = require('../controllers/auth.controller');
 
 router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
 
 /**
  * @swagger
- * /it4788/api/login:
+ * /it4788/login:
  *   post:
  *     summary: 
  *     description: 
@@ -53,7 +53,7 @@ router.post('/login', AuthController.login);
 
 /**
  * @swagger
- * /it4788/api/logout:
+ * /it4788/logout:
  *   post:
  *     summary: 
  *     description: 
@@ -85,7 +85,7 @@ router.post('/logout', AuthController.logout);
 
 /**
  * @swagger
- * /it4788/api/signup:
+ * /it4788/signup:
  *   post:
  *     summary: 
  *     description: 
@@ -123,7 +123,7 @@ router.post('/signup', AuthController.signup);
 
 /**
  * @swagger
- * /it4788/api/get_verify_code:
+ * /it4788/get_verify_code:
  *   post:
  *     summary: 
  *     description: 
@@ -155,7 +155,7 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
 
 /**
  * @swagger
- * /it4788/api/check_verify_code:
+ * /it4788/check_verify_code:
  *   post:
  *     summary: 
  *     description: 
@@ -198,7 +198,7 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
 
 /**
  * @swagger
- * /it4788/api/change_info_after_setup:
+ * /it4788/change_info_after_setup:
  *   post:
  *     summary: 
  *     description: 
@@ -248,7 +248,7 @@ router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
 
 /**
  * @swagger
- * /it4788/api/change_password:
+ * /it4788/change_password:
  *   post:
  *     summary: 
  *     description: 
@@ -287,7 +287,7 @@ router.post('/change_password', AuthController.changePassword);
 
 /**
  * @swagger
- * /it4788/api/set_dev_token:
+ * /it4788/set_dev_token:
  *   post:
  *     summary: Set Dev token
  *     description: Set Dev token

@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const LikeController = require('../controllers/likes');
+const LikeController = require('../controllers/likes.controller');
 
 router.get('/test-like', (req, res) => res.send({'test': 'like OK'}))
 
 /**
  * @swagger
- * /it4788/api/like:
+ * /it4788/like:
  *   post:
  *     summary: Like post
  *     description: Like a post

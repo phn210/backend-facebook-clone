@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const CommentController = require('../controllers/comments');
+const CommentController = require('../controllers/comments.controller');
 
 router.get('/test-comment', (req, res) => res.send({'test': 'comment OK'}))
 
 /**
  * @swagger
- * /it4788/api/get_comment:
+ * /it4788/get_comment:
  *   post:
  *     summary: Get comment on post
  *     description: Get a comment on a post
@@ -65,7 +65,7 @@ router.post('/get_comment', CommentController.getComment);
 
 /**
  * @swagger
- * /it4788/api/set_comment:
+ * /it4788/set_comment:
  *   post:
  *     summary: Comment on post
  *     description: Comment on a post

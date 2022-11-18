@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const SearchController = require('../controllers/search');
+const SearchController = require('../controllers/searches.controller');
 
 router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
 
 /**
  * @swagger
- * /it4788/api/search:
+ * /it4788/search:
  *   post:
  *     summary: Search
  *     description: Search with a keyword
@@ -82,7 +82,7 @@ router.post('/search', SearchController.search);
 
 /**
  * @swagger
- * /it4788/api/get_saved_search:
+ * /it4788/get_saved_search:
  *   post:
  *     summary: Get saved search
  *     description: Get a user's saved search
@@ -132,7 +132,7 @@ router.post('/get_saved_search', SearchController.getSavedSearch);
 
 /**
  * @swagger
- * /it4788/api/del_saved_search:
+ * /it4788/del_saved_search:
  *   post:
  *     summary: Delete saved search
  *     description: Delete a user's saved search
