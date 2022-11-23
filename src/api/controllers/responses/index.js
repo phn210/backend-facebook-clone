@@ -1,4 +1,4 @@
-const responseCodes = require('./codes');
+const CODE = require('./codes');
 
 function sendData(res, responseCode, data={}) {
     const content = {
@@ -10,11 +10,12 @@ function sendData(res, responseCode, data={}) {
 }
 
 function sendError(res, error) {
-    return sendData(res, error);
+    console.error(error);
+    return sendData(res, CODE.isUnknownError(error) ? CODE.ERROR.UNKNOWN_ERROR : error);
 }
 
 module.exports = {
-    responseCodes,
+    CODE,
     sendData,
     sendError
 }

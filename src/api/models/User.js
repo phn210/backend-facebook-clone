@@ -4,20 +4,20 @@ const { FileSchema } = require('./File');
 
 const UserSchema = new Schema({
     name: { type: String },                                                 // Name on profile
-    phoneNumber: { type: String, required: true },                          // Phone number
-    dateLogin: { type: Date },                                              // Latest login timestamp
-    registerDate: { type: Date, default: Date.now, required: true },        // Registered timestamp
+    phone_number: { type: String, required: true },                          // Phone number
+    date_login: { type: Date },                                              // Latest login timestamp
+    register_date: { type: Date, default: new Date(), required: true },        // Registered timestamp
     password: { type: String, required: true },                             // Hashed password
-    verifyCode: { type: String },                                           // Latest verify code
-    isVerified: { type: Boolean },                                          // Whether user is verified
-    isBlocked: { type: Boolean, default: false },                           // Whether user is blocked ??
+    verify_code: { type: String },                                           // Latest verify code
+    is_verified: { type: Boolean, default: false },                                          // Whether user is verified
+    is_blocked: { type: Boolean, default: false },                           // Whether user is blocked ??
     described: { type: String },                                            // Profile's description
-    avatarImage: FileSchema,                                                // Avatar image
-    coverImage: FileSchema,                                                 // Cover image
+    avatar_image: FileSchema,                                                // Avatar image
+    cover_image: FileSchema,                                                 // Cover image
     address: { type: String },                                              // Address
     city: { type: String },                                                 // City
     country: { type: String },                                              // Country
-    link: { type: String, required: true },                                 // Profile's link
+    link: { type: String },                                                 // Profile's link
     // timeLastRequestGetVerifyCode: { type: Date }
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

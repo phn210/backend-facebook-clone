@@ -1,3 +1,20 @@
+const response = require('./responses');
+const userService = require('../services/users.service');
+
+async function signup(req, res, next) {
+    try {
+        const user = {
+            phone_number: req.body.phone_number,
+            password: req.body.password
+        }
+        const newUser = await userService.createUser(user);
+
+        response.sendData(res, response.CODE.OK, newUser);
+    } catch (error) {
+        response.sendError(res, error);
+    }
+}
+
 async function login(req, res, next) {
     try {
         res.send({'test': 'OK'})
@@ -7,14 +24,6 @@ async function login(req, res, next) {
 }
 
 async function logout(req, res, next) {
-    try {
-        res.send({'test': 'OK'})
-    } catch (error) {
-        res.status(500).send({'error': 'ERROR'})
-    }
-}
-
-async function signup(req, res, next) {
     try {
         res.send({'test': 'OK'})
     } catch (error) {

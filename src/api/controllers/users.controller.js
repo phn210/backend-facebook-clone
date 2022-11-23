@@ -1,3 +1,5 @@
+const userService = require('../services/users.service');
+
 async function getUserFriends(req, res, next) {
     try {
         res.send({'test': 'OK'})
