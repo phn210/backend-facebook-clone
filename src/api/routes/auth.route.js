@@ -1,8 +1,49 @@
 const router = require('express').Router();
+const multer = require('multer');
 
 const AuthController = require('../controllers/auth.controller');
+const UploadMiddleware = require('../middlewares/upload.middleware');
 
 router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
+
+/**
+ * @swagger
+ * /it4788/signup:
+ *   post:
+ *     summary: 
+ *     description: 
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       description:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone_number:
+ *                 type: string
+ *                 required: true
+ *               password:
+ *                 type: string
+ *                 required: true
+ *                 format: password
+ *     responses:
+ *       '200':
+ *         description:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ */
+ router.post('/signup', AuthController.signup);
 
 /**
  * @swagger
@@ -19,10 +60,15 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *           schema:
  *             type: object
  *             properties:
- *               phonenumber:
+ *               phone_number:
  *                 type: string
+ *                 required: true
  *               password:
  *                 type: string
+ *                 required: true
+ *               device_id:
+ *                 type: string
+ *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -38,15 +84,9 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *                 data:
  *                   type: object
  *                   properties:
- *                     id:
- *                       type: string
- *                     username:
- *                       type: string
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
  *                     token:
- *                       type: string
- *                     avatar:
- *                       type: string
- *                     active:
  *                       type: string
  */
 router.post('/login', AuthController.login);
@@ -85,7 +125,7 @@ router.post('/logout', AuthController.logout);
 
 /**
  * @swagger
- * /it4788/signup:
+ * /it4788/get_verify_code:
  *   post:
  *     summary: 
  *     description: 
@@ -98,11 +138,7 @@ router.post('/logout', AuthController.logout);
  *           schema:
  *             type: object
  *             properties:
- *               phonenumber:
- *                 type: string
- *               password:
- *                 type: string
- *               uuid:
+ *               phone_number:
  *                 type: string
  *     responses:
  *       '200':
@@ -118,38 +154,9 @@ router.post('/logout', AuthController.logout);
  *                   type: string
  *                 data:
  *                   type: object
- */
-router.post('/signup', AuthController.signup);
-
-/**
- * @swagger
- * /it4788/get_verify_code:
- *   post:
- *     summary: 
- *     description: 
- *     tags:
- *       - Auth
- *     requestBody:
- *       description:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               phonenumber:
- *                 type: string
- *     responses:
- *       '200':
- *         description:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: string
- *                 message:
- *                   type: string
+ *                   properties:
+ *                     verify_code:
+ *                       type: string
  */
 router.post('/get_verify_code', AuthController.getVerifyCode);
 
@@ -168,10 +175,12 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
  *           schema:
  *             type: object
  *             properties:
- *               phonenumber:
+ *               phone_number:
  *                 type: string
- *               code_verify:
+ *                 required: true
+ *               verify_code:
  *                 type: string
+ *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -187,8 +196,6 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
  *                 data:
  *                   type: object
  *                   properties:
- *                     token:
- *                       type: string
  *                     id:
  *                       type: string
  *                     active:
@@ -198,7 +205,7 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
 
 /**
  * @swagger
- * /it4788/change_info_after_setup:
+ * /it4788/change_info_after_signup:
  *   post:
  *     summary: 
  *     description: 
@@ -213,8 +220,10 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               username:
  *                 type: string
+ *                 required: true
  *               avatar:
  *                 type: string
  *                 format: binary
@@ -237,14 +246,17 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *                       type: string
  *                     username:
  *                       type: string
- *                     phonenumber:
+ *                     phone_number:
  *                       type: string
  *                     created:
  *                       type: string
  *                     avatar:
  *                       type: string
  */
-router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
+router.post(
+    '/change_info_after_signup',
+    UploadMiddleware.upload(),
+    AuthController.changeInfoAfterSignUp);
 
 /**
  * @swagger
@@ -263,11 +275,13 @@ router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               password:
  *                 type: string
+ *                 required: true
  *               new_password:
  *                 type: string
- *                 format: binary
+ *                 required: true
  *     responses:
  *       '200':
  *         description:

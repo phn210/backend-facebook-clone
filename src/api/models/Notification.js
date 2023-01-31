@@ -12,7 +12,8 @@ const SUPPORTED_NOTIFICATIONS = [
     'FRIEND_SUGGESTED',
     'BIRTHDAY',
     'VIDEO',
-    'REPORT'
+    'REPORT',
+    'LOGIN'
 ]
 
 const NotificationSchema = new Schema({

@@ -22,6 +22,9 @@ router.get('/test-comment', (req, res) => res.send({'test': 'comment OK'}))
  *               token:
  *                 type: string
  *                 required: true
+ *               id:
+ *                 type: string
+ *                 required: true
  *               index:
  *                 type: string
  *                 required: true

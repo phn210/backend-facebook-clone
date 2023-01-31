@@ -14,3 +14,17 @@ const controllers = [
 router.use('/', controllers);
 
 module.exports = router;
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     File:
+ *       properties:
+ *         filename:
+ *           type: string
+ *           required: true
+ *         url:
+ *           type: string
+ *           required: true
+ */

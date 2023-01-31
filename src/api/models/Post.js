@@ -4,7 +4,8 @@ const { FileSchema } = require('./File');
 
 const PostSchema = new Schema({
     author: { type: mongoose.Types.ObjectId, required: true },                          // Author user's ID
-    content: { type: String, required: true },                                          // Post's content
+    content: { type: String },                                          // Post's content
+    status: { type: String },
     image: { type: [FileSchema] },                                                      // Post's uploaded images
     video: { type: FileSchema },                                                        // Post's uploaded video
     modified: { type: Number, default: 0, required: true },                             // Number of modification

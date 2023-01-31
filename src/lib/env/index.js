@@ -26,6 +26,7 @@ const env = {
         host: getOsEnv('APP_HOST'),
         routePrefix: getOsEnv('APP_ROUTE_PREFIX'),
         port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
+        url: process.env.NODE_ENV === 'production' ? `https://${getOsEnv('APP_HOST')}` : `http://${getOsEnv('APP_HOST')}:${getOsEnv('APP_PORT')}`
     },
     db: {
         host: getOsEnvOptional('MONGODB_HOST') ?? 'localhost',
@@ -37,6 +38,14 @@ const env = {
     swagger: {
         enabled: toBool(getOsEnv('SWAGGER_ENABLED')),
         route: getOsEnv('SWAGGER_ROUTE')
+    },
+    jwt: {
+        privateKey: getOsEnv('JWT_PRIVATE_KEY'),
+        publicKey: getOsEnv('JWT_PUBLIC_KEY'),
+        options: {
+            expiresIn: getOsEnvOptional('JWT_ACCESS_TOKEN_LIFE') ?? "12h",
+            algorithm: getOsEnvOptional('JWT_SIGN_ALGO') ?? 'RS512'
+        }
     }
 };
 
