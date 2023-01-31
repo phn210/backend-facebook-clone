@@ -18,7 +18,7 @@ RUN npm config rm proxy && \
 
 COPY --chown=node:node . /usr/src/app
 
-ENV NODE_ENV=production \
+ENV NODE_ENV=development \
     daemon=false \
     silent=false
 
