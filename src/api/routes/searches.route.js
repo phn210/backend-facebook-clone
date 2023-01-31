@@ -2,10 +2,8 @@ const router = require('express').Router();
 
 const SearchController = require('../controllers/searches.controller');
 
-router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
-
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/search:
  *   post:
  *     summary: Search
@@ -81,7 +79,7 @@ router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
 router.post('/search', SearchController.search);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_saved_search:
  *   post:
  *     summary: Get saved search
@@ -131,7 +129,7 @@ router.post('/search', SearchController.search);
 router.post('/get_saved_search', SearchController.getSavedSearch);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/del_saved_search:
  *   post:
  *     summary: Delete saved search

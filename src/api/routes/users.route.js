@@ -3,8 +3,6 @@ const router = require('express').Router();
 const UserController = require('../controllers/users.controller');
 const UploadMiddleware = require('../middlewares/upload.middleware');
 
-router.get('/test-user', (req, res) => res.send({'test': 'user OK'}));
-
 /**
  * @swagger
  * components:
@@ -458,7 +456,7 @@ router.post('/get_requested_friends', UserController.getRequestedFriends);
 router.post('/set_request_friend', UserController.setRequestFriend);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_list_suggested_friends:
  *   post:
  *     summary: Get list suggested friends

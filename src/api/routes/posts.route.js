@@ -340,7 +340,7 @@ router.post('/delete_post', PostController.deletePost);
 router.post('/report_post', PostController.reportPost);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/check_new_item:
  *   post:
  *     summary: Check new item
@@ -382,7 +382,7 @@ router.post('/report_post', PostController.reportPost);
 router.post('/check_new_item', PostController.checkNewItem);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_list_videos:
  *   post:
  *     summary: Get list videos

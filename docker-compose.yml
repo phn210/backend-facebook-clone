@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+  node:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    expose:
+      - 7000
+    ports:
+      - 7000:7000
+    volumes:
+      - ./public/uploads/:/usr/src/app/public/uploads/
+
+  db:
+    image: mongo:bionic
+    restart: unless-stopped
+    expose:
+      - 27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hust
+      MONGO_INITDB_ROOT_PASSWORD: it4788
+    volumes:
+      - mongo:/data/db
+
+volumes:
+  mongo:

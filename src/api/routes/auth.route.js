@@ -259,7 +259,7 @@ router.post(
     AuthController.changeInfoAfterSignUp);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/change_password:
  *   post:
  *     summary: 
@@ -300,7 +300,7 @@ router.post(
 router.post('/change_password', AuthController.changePassword);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/set_dev_token:
  *   post:
  *     summary: Set Dev token

@@ -5,7 +5,7 @@ const NotificationController = require('../controllers/notifications.controller'
 router.get('/test-notification', (req, res) => res.send({'test': 'notification OK'}));
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_notification:
  *   post:
  *     summary: Get notification
@@ -67,7 +67,7 @@ router.get('/test-notification', (req, res) => res.send({'test': 'notification O
 router.post('/get_notification', NotificationController.getNotification);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/set_read_notification:
  *   post:
  *     summary: Set read notification
@@ -110,7 +110,7 @@ router.post('/get_notification', NotificationController.getNotification);
 router.post('/set_read_notification', NotificationController.setReadNotification);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_push_settings:
  *   post:
  *     summary: Get list suggested friends
@@ -168,7 +168,7 @@ router.post('/set_read_notification', NotificationController.setReadNotification
 router.post('/get_push_settings', NotificationController.getPushSettings);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/set_push_settings:
  *   post:
  *     summary: Set list suggested friends
@@ -223,7 +223,7 @@ router.post('/get_push_settings', NotificationController.getPushSettings);
 router.post('/set_push_settings', NotificationController.setPushSettings);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/check_new_version:
  *   post:
  *     summary: Check app new version
