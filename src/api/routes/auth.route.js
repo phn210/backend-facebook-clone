@@ -4,14 +4,12 @@ const multer = require('multer');
 const AuthController = require('../controllers/auth.controller');
 const UploadMiddleware = require('../middlewares/upload.middleware');
 
-router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
-
 /**
  * @swagger
  * /it4788/signup:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Signup
+ *     description: Signup with new phone number and receive verify code in response (to be updated to SMS) 
  *     tags:
  *       - Auth
  *     requestBody:
@@ -41,7 +39,10 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     verify_code:
+ *                       type: string
  */
  router.post('/signup', AuthController.signup);
 
@@ -49,8 +50,8 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  * @swagger
  * /it4788/login:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Login
+ *     description: Login with a signup phone number, device_id is currently unused
  *     tags:
  *       - Auth
  *     requestBody:
@@ -84,10 +85,15 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *                 data:
  *                   type: object
  *                   properties:
- *                     user:
- *                       $ref: '#/components/schemas/User'
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
  *                     token:
  *                       type: string
+ *                     avatar:
+ *                       type: string
+ *                     
  */
 router.post('/login', AuthController.login);
 
@@ -95,8 +101,8 @@ router.post('/login', AuthController.login);
  * @swagger
  * /it4788/logout:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Logout
+ *     description: Don't really do anything :) Remove token in app to logout
  *     tags:
  *       - Auth
  *     requestBody:
@@ -127,8 +133,8 @@ router.post('/logout', AuthController.logout);
  * @swagger
  * /it4788/get_verify_code:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Get new verify code
+ *     description: Generate new verify code if not verified and receive in response (to be updated to SMS)
  *     tags:
  *       - Auth
  *     requestBody:
@@ -164,8 +170,8 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
  * @swagger
  * /it4788/check_verify_code:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Verify user
+ *     description: Submit verify code to verify user
  *     tags:
  *       - Auth
  *     requestBody:
@@ -198,7 +204,7 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
  *                   properties:
  *                     id:
  *                       type: string
- *                     active:
+ *                     is_verified:
  *                       type: string
  */
 router.post('/check_verify_code', AuthController.checkVerifyCode);
@@ -207,8 +213,8 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  * @swagger
  * /it4788/change_info_after_signup:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Change info after signup
+ *     description: Update user's info after signup
  *     tags:
  *       - Auth
  *     requestBody:
@@ -253,10 +259,7 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *                     avatar:
  *                       type: string
  */
-router.post(
-    '/change_info_after_signup',
-    UploadMiddleware.upload(),
-    AuthController.changeInfoAfterSignUp);
+router.post('/change_info_after_signup', UploadMiddleware.upload(), AuthController.changeInfoAfterSignUp);
 
 /**
  * swagger // FIXME

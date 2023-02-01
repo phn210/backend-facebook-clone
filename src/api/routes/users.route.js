@@ -97,12 +97,10 @@ const UploadMiddleware = require('../middlewares/upload.middleware');
  *                             type: string
  *                           avatar:
  *                             type: string
- *                           same_friends:
- *                             type: string
+ *                           mutual_friends:
+ *                             type: integer
  *                           created:
  *                             type: string
- *                     total:
- *                       type: string
  */
 router.post('/get_user_friends', UserController.getUserFriends);
 
@@ -150,7 +148,7 @@ router.post('/get_user_friends', UserController.getUserFriends);
  *                       type: string
  *                     avatar:
  *                       type: string
- *                     cover_image:
+ *                     cover:
  *                       type: string
  *                     link:
  *                       type: string
@@ -220,9 +218,9 @@ router.post('/get_user_info', UserController.getUserInfo);
  *                   properties:
  *                     id:
  *                       type: string
- *                     avatar_image:
+ *                     avatar:
  *                       type: string
- *                     cover_image:
+ *                     cover:
  *                       type: string
  *                     link:
  *                       type: string
@@ -276,7 +274,7 @@ router.post('/set_user_info', UploadMiddleware.upload(), UserController.setUserI
  *                   properties:
  *                     id:
  *                       type: string
- *                     name:
+ *                     username:
  *                       type: string
  *                     avatar:
  *                       type: string

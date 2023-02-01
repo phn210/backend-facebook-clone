@@ -34,7 +34,7 @@ async function getComment(req, res, next) {
                 'poster': {
                     'id': poster._id,
                     'name': poster.name,
-                    'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/uploads/avatar-default.jpg')
+                    'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
                 },
                 'is_blocked': isBlocked
             }
@@ -81,7 +81,7 @@ async function setComment(req, res, next) {
                 'poster': {
                     'id': poster._id,
                     'name': poster.name,
-                    'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/uploads/avatar-default.jpg')
+                    'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
                 },
                 'is_blocked': isBlocked
             }

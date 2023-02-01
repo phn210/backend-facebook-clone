@@ -22,7 +22,9 @@ async function signup(req, res, next) {
 
         const newUser = await userService.createUser(user);
 
-        response.sendData(res, response.CODE.OK, newUser);
+        response.sendData(res, response.CODE.OK, {
+            'verify_code': newUser.verify_code
+        });
     } catch (error) {
         response.sendError(res, error);
     }
@@ -39,8 +41,10 @@ async function login(req, res, next) {
         
         if (userService.checkValidPassword(user.password, loginInfo.password)) {
             response.sendData(res, response.CODE.OK, {
+                'id': user._id,
+                'username': user.name ?? '',
                 'token': jwtService.sign(jwtService.generatePayload(user)),
-                'user': user
+                'avatar': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
             });
         } else {
             response.sendError(res, response.CODE.ERROR.PARAMETER_VALUE_IS_INVALID);
@@ -139,10 +143,10 @@ async function changeInfoAfterSignUp(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'id': updatedUser._id,
-            'name': updatedUser.name,
+            'username': updatedUser.name,
             'phone_number': updatedUser.phone_number,
             'created_at': updatedUser.created_at,
-            'avatar': env.app.url+user.avatar_image.url
+            'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
         })
     } catch (error) {
         response.sendError(res, error);

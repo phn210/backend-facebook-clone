@@ -33,8 +33,8 @@ async function getUserFriends(req, res, next) {
             return {
                 'id': friend._id,
                 'username': friend.name,
-                'avatar_image': env.app.url+(friend.avatar_image?.url ?? '/public/uploads/avatar-default.jpg'),
-                'same_friends': mutualFriends.length,
+                'avatar_image': env.app.url+(friend.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+                'mutual_friends': mutualFriends.length,
                 'created': e.created_at 
             }
         }));
@@ -79,7 +79,7 @@ async function getUserInfo(req, res, next) {
             'username': user.name,
             'created': user.created_at,
             'description': user.described,
-            'avatar': env.app.url+(user.avatar_image?.url ?? '/public/uploads/avatar-default.jpg'),
+            'avatar': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
             'cover': user.cover_image?.url ? env.app.url+user.cover_image?.url : '',
             'link': user._id,
             'address': user.address ?? '',
@@ -128,8 +128,8 @@ async function setUserInfo(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'id': updatedUser._id,
-            'avatar_image': env.app.url+(updatedUser.avatar_image?.url ?? '/public/uploads/avatar-default.jpg'),
-            'cover_image': user.cover_image?.url ? env.app.url+updatedUser.cover_image?.url : '',
+            'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+            'cover': user.cover_image?.url ? env.app.url+updatedUser.cover_image?.url : '',
             'link': updatedUser._id,
             'address': updatedUser.address ?? '',
             'city': updatedUser.city ?? '',
@@ -155,7 +155,7 @@ async function getListBlocks(req, res, next) {
             return {
                 'id': victim._id,
                 'username': victim.name,
-                'avatar_image': env.app.url+(victim.avatar_image?.url ?? '/public/uploads/avatar-default.jpg')
+                'avatar': env.app.url+(victim.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
             }
         }));
 
@@ -231,7 +231,7 @@ async function getRequestedFriends(req, res, next) {
             return {
                 'id': sender._id,
                 'username': sender.name,
-                'avatar_image': env.app.url+(sender.avatar_image?.url ?? '/public/uploads/avatar-default.jpg'),
+                'avatar_image': env.app.url+(sender.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
                 'same_friends': friends.length,
                 'created': _req.created_at 
             }

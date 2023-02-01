@@ -48,7 +48,7 @@ async function getListPosts(req, res, next) {
                 'author': {
                     'id': author._id,
                     'username': author.name,
-                    'avatar': env.app.url+(author.avatar_image?.url ?? '/public/uploads/avatar-default.jpg'),
+                    'avatar': env.app.url+(author.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
                     'online': true          // FIXME
                 }
             }
@@ -95,7 +95,7 @@ async function getPost(req, res, next) {
             'author': {
                 'id': author._id,
                 'username': author.name,
-                'avatar': env.app.url+(author.avatar_image?.url ?? '/public/uploads/avatar-default.jpg')
+                'avatar': env.app.url+(author.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
             },
             'is_blocked': isBlocked
         });
