@@ -55,6 +55,7 @@ http[s]:<hostname>[:<port>]/api-docs
 ## > Docker
 
 Install Docker and Docker Compose
+
 Setup the project
 
 Run
