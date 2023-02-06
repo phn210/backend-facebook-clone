@@ -83,7 +83,7 @@ async function getPost(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'id': post._id,
-            'describe': post.content,
+            'content': post.content,
             'status': post.status,
             'created': post.created_at,
             'modified': post.modified,

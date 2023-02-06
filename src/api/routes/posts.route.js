@@ -121,7 +121,7 @@ router.post('/get_list_posts', PostController.getListPosts);
  *                   properties:
  *                     id:
  *                       type: string
- *                     describe:
+ *                     content:
  *                       type: string
  *                     status:
  *                       type: string

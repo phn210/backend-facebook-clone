@@ -37,6 +37,7 @@ async function getFeedPosts(user_id, last_id=null, index=0, count=20) {
     const userFriends = (await friendService.findUserFriends(user_id, 0, 0)).map(
         friend => (friend.user1_id.toString() == user_id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString()
     );
+    userFriends.push(user_id.toString()); // FIXME
 
     const friendsPosts = await getUsersPosts(userFriends, index, count);
     // if (friendsPosts.length >= 20) return friendsPosts;
@@ -49,7 +50,8 @@ async function createPost(post) {
         author: post.author,
         content: post.content,
         image: post.image,
-        video: post.video
+        video: post.video,
+        status: post.status
     });
 
     await newPost.save();
