@@ -25,12 +25,6 @@ router.get('/test-comment', (req, res) => res.send({'test': 'comment OK'}))
  *               id:
  *                 type: string
  *                 required: true
- *               index:
- *                 type: string
- *                 required: true
- *               count:
- *                 type: string
- *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -57,12 +51,12 @@ router.get('/test-comment', (req, res) => res.send({'test': 'comment OK'}))
  *                       properties:
  *                         id:
  *                           type: string
- *                         name:
+ *                         username:
  *                           type: string
  *                         avatar:
  *                           type: string
  *                     is_blocked:
- *                       type: string
+ *                       type: boolean
  */
 router.post('/get_comment', CommentController.getComment);
 
@@ -122,7 +116,7 @@ router.post('/get_comment', CommentController.getComment);
  *                       properties:
  *                         id:
  *                           type: string
- *                         name:
+ *                         username:
  *                           type: string
  *                         avatar:
  *                           type: string

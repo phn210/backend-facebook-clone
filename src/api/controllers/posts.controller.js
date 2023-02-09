@@ -21,7 +21,7 @@ async function getListPosts(req, res, next) {
             index: req.body.index ? Number(req.body.index) : 0,
             count: req.body.count ? Number(req.body.count) : 20,
         }
-
+        
         const posts = await postService.getFeedPosts(user._id, query.last_id, query.index, query.count);
         const postsDetails = await Promise.all(posts.map(async (post) => {
             const [likes, comments, isLiked, author, isBlocked] = await Promise.all([
@@ -137,7 +137,24 @@ async function addPost(req, res, next) {
 
         const newPost = await postService.createPost(post);
 
-        response.sendData(res, response.CODE.OK, { 'id': newPost._id });
+        response.sendData(res, response.CODE.OK, {
+            'id': newPost._id,
+            'content': newPost.content,
+            'status': newPost.status,
+            'created': newPost.created_at,
+            'modified': newPost.modified,
+            'like': 0,                      
+            'comment': 0,                   
+            'is_liked': false,
+            'image': newPost.image.map(img => env.app.url+img.url),
+            'video': newPost.video?.url ? env.app.url+newPost.video?.url : '',
+            'author': {
+                'id': author._id,
+                'username': author.name,
+                'avatar': env.app.url+(author.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+            },
+            'is_blocked': false
+        });
     } catch (error) {
         response.sendError(res, error);
     }
