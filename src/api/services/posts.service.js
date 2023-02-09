@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const friendService = require('../services/friends.service');
+const notificationService = require('../services/notifications.service');
 const Comment = require('../models/Comment');
 const File = require('../models/File');
 const Like = require('../models/Like');
@@ -14,18 +15,16 @@ async function findOnePost(post_id) {
     return post;
 }
 
-async function getUserPosts(user_id, index=0, count=20) {
+// async function getUserPosts(user_id, index=0, count=20) {}
 
-}
-
-async function getUsersPosts(users_id, index=0, count=20) {
+async function getUsersPosts(users_id, last_id=0, index=0, count=20) {
     if (count) {
         return await Post.find({ 'author': { $in: users_id } })
-                    .sort('-created_at')
-                    .skip(index*count)
+                    .sort('-sorted_at')
+                    .skip(last_id+index*count)
                     .limit(count);
     } else {
-        return await Post.find({ 'author': { $in: users_id } }).sort('-created_at');
+        return await Post.find({ 'author': { $in: users_id } }).sort('-sorted_at');
     }
 }
 
@@ -33,16 +32,20 @@ async function getLatestPosts(index=0, count=20) {
 
 }
 
-async function getFeedPosts(user_id, last_id=null, index=0, count=20) {
+async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
     const userFriends = (await friendService.findUserFriends(user_id, 0, 0)).map(
         friend => (friend.user1_id.toString() == user_id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString()
     );
     userFriends.push(user_id.toString()); // FIXME
 
-    const friendsPosts = await getUsersPosts(userFriends, index, count);
+    const friendsPosts = await getUsersPosts(userFriends, last_id, index, count);
     // if (friendsPosts.length >= 20) return friendsPosts;
 
     return friendsPosts; // FIXME
+}
+
+async function getAllPosts() {
+    return await Post.find().sort('-sorted_at');
 }
 
 async function createPost(post) {
@@ -119,6 +122,7 @@ async function createLike(user_id, post_id) {
     })
 
     await like.save();
+    console.log(like);
     return true;
 }
 
@@ -139,11 +143,11 @@ async function getPostLikes(post_id) {
 async function getPostComments(post_id, index=0, count=20) {
     if (count) {
         return await Comment.find({ 'post_id': post_id })
-                    .sort('-created_at')
+                    .sort('-sorted_at')
                     .skip(index*count)
                     .limit(count);
     } else {
-        return await Comment.find({ 'post_id': post_id }).sort('-created_at');
+        return await Comment.find({ 'post_id': post_id }).sort('-sorted_at');
     }
 }
 
@@ -155,12 +159,14 @@ async function createComment(comment) {
     })
 
     await newComment.save();
-    return newComment
+    return newComment;
 }
 
 module.exports = {
     findOnePost,
+    getUsersPosts,
     getFeedPosts,
+    getAllPosts,
     createPost,
     updatePost,
     deletePost,

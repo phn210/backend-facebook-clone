@@ -31,9 +31,10 @@ async function getComment(req, res, next) {
             return {
                 'id': com._id,
                 'comment': com.comment,
+                'created': com.created_at,
                 'poster': {
                     'id': poster._id,
-                    'name': poster.name,
+                    'username': poster.name,
                     'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
                 },
                 'is_blocked': isBlocked

@@ -3,7 +3,7 @@ const router = require('express').Router();
 const SearchController = require('../controllers/searches.controller');
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/search:
  *   post:
  *     summary: Search
@@ -19,6 +19,7 @@ const SearchController = require('../controllers/searches.controller');
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               keyword:
  *                 type: string
  *                 required: true
@@ -47,39 +48,51 @@ const SearchController = require('../controllers/searches.controller');
  *                   items:
  *                     type: object
  *                     properties:
- *                       id:
- *                         type: string
- *                       image:
- *                         type: string
- *                       video:
- *                         type: object
- *                         properties:
- *                           url:
- *                             type: string
- *                           thumb:
- *                             type: string
- *                       like:
- *                         type: string
- *                       comment:
- *                         type: string
- *                       is_liked:
- *                         type: string
- *                       author:
- *                         type: object
- *                         properties:
- *                           id:
- *                             type: string
- *                           username:
- *                             type: string
- *                           avatar:
- *                             type: string
- *                       described:
- *                         type: string
+ *                       posts:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: string
+ *                             content:
+ *                               type: string
+ *                             image:
+ *                               type: array
+ *                               items:
+ *                                 type: string
+ *                             video:
+ *                               type: string
+ *                             created:
+ *                               type: string
+ *                             like:
+ *                               type: integer
+ *                             comment:
+ *                               type: integer
+ *                             is_liked:
+ *                               type: boolean
+ *                             is_blocked:
+ *                               type: boolean
+ *                             can_comment:
+ *                               type: boolean
+ *                             can_edit:
+ *                               type: boolean
+ *                             status:
+ *                               type: string
+ *                             author:
+ *                               type: object
+ *                               properties:
+ *                                 id:
+ *                                   type: string
+ *                                 username:
+ *                                   type: string
+ *                                 avatar:
+ *                                   type: string
  */
 router.post('/search', SearchController.search);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/get_saved_search:
  *   post:
  *     summary: Get saved search
@@ -129,7 +142,7 @@ router.post('/search', SearchController.search);
 router.post('/get_saved_search', SearchController.getSavedSearch);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/del_saved_search:
  *   post:
  *     summary: Delete saved search

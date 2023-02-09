@@ -11,7 +11,7 @@ async function findUserFriends(user_id, index=0, count=20) {
                 { 'user2_id': user_id }
             ]
         })
-        .sort('-created_at')
+        .sort('-sorted_at')
         .skip(index*count)
         .limit(count);
     } else {
@@ -20,7 +20,7 @@ async function findUserFriends(user_id, index=0, count=20) {
                 { 'user1_id': user_id },
                 { 'user2_id': user_id }
             ]
-        }).sort('-created_at');
+        }).sort('-sorted_at');
     }
 }
 
@@ -76,11 +76,11 @@ async function sentFriendRequest(sender_id, receiver_id) {
 async function getFriendRequests(user_id, index=0, count=20) {
     if (count) {
         return await FriendRequest.find({ 'receiver_id': user_id })
-                    .sort('-created_at')
+                    .sort('-sorted_at')
                     .skip(index*count)
                     .limit(count);
     } else {
-        return await FriendRequest.find({ 'receiver_id': user_id }).sort('-created_at');
+        return await FriendRequest.find({ 'receiver_id': user_id }).sort('-sorted_at');
     }
 }
 
@@ -140,11 +140,11 @@ async function getMutualFriends(user1_id, user2_id) {
 async function getBlocks(user_id, index=0, count=20) {
     if (count) {
         return await Block.find({ blocker_id: user_id })
-                    .sort('-created_at')
+                    .sort('-sorted_at')
                     .skip(index*count)
                     .limit(count);
     } else {
-        return await Block.find({ blocker_id: user_id }).sort('-created_at');
+        return await Block.find({ blocker_id: user_id }).sort('-sorted_at');
     }
 }
 
