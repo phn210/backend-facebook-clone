@@ -44,25 +44,27 @@ router.get('/test-comment', (req, res) => res.send({'test': 'comment OK'}))
  *                 message:
  *                   type: string
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     comment:
- *                       type: string
- *                     created:
- *                       type: string
- *                     poster:
- *                       type: object
- *                       properties:
- *                         id:
- *                           type: string
- *                         name:
- *                           type: string
- *                         avatar:
- *                           type: string
- *                     is_blocked:
- *                       type: string
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       comment:
+ *                         type: string
+ *                       created:
+ *                         type: string
+ *                       poster:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                           name:
+ *                             type: string
+ *                           avatar:
+ *                             type: string
+ *                       is_blocked:
+ *                         type: boolean
  */
 router.post('/get_comment', CommentController.getComment);
 
