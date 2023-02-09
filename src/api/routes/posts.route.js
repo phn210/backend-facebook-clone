@@ -146,7 +146,7 @@ router.post('/get_list_posts', PostController.getListPosts);
  *                       properties:
  *                         id:
  *                           type: string
- *                         name:
+ *                         username:
  *                           type: string
  *                         avatar:
  *                           type: string
@@ -201,6 +201,37 @@ router.post('/get_post', PostController.getPost);
  *                   type: object
  *                   properties:
  *                     id:
+ *                       type: string
+ *                     content:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                     created:
+ *                       type: string
+ *                     modified:
+ *                       type: string
+ *                     like:
+ *                       type: string
+ *                     comment:
+ *                       type: string
+ *                     is_liked:
+ *                       type: string
+ *                     image:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                     video:
+ *                       type: string
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         username:
+ *                           type: string
+ *                         avatar:
+ *                           type: string
+ *                     is_blocked:
  *                       type: string
  */
 router.post('/add_post', UploadMiddleware.upload(), PostController.addPost);
@@ -430,7 +461,7 @@ router.post('/check_new_item', PostController.checkNewItem);
  *                         properties:
  *                           id:
  *                             type: string
- *                           name:
+ *                           username:
  *                             type: string
  *                           video:
  *                             type: object

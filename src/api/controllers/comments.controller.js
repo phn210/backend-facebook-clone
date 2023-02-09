@@ -31,9 +31,10 @@ async function getComment(req, res, next) {
             return {
                 'id': com._id,
                 'comment': com.comment,
+                'created': com.created_at,
                 'poster': {
                     'id': poster._id,
-                    'name': poster.name,
+                    'username': poster.name,
                     'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
                 },
                 'is_blocked': isBlocked
@@ -69,25 +70,40 @@ async function setComment(req, res, next) {
         }
 
         const newComment = await postService.createComment(comment);
-        const comments = await postService.getPostComments(post._id, query.index, query.count);
-        const commentsDetails = await Promise.all(comments.map(async (com) => {
-            const [poster, isBlocked] = await Promise.all([
-                userService.findUserById(com.author_id),
-                friendService.isBlock(post.author, com.author_id)
-            ]);
-            return {
-                'id': com._id,
-                'comment': com.comment,
-                'poster': {
-                    'id': poster._id,
-                    'name': poster.name,
-                    'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
-                },
-                'is_blocked': isBlocked
-            }
-        }));
+        // const comments = await postService.getPostComments(post._id, query.index, query.count);
+        // const commentsDetails = await Promise.all(comments.map(async (com) => {
+        //     const [poster, isBlocked] = await Promise.all([
+        //         userService.findUserById(com.author_id),
+        //         friendService.isBlock(post.author, com.author_id)
+        //     ]);
+        //     return {
+        //         'id': com._id,
+        //         'comment': com.comment,
+        //         'poster': {
+        //             'id': poster._id,
+        //             'name': poster.name,
+        //             'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+        //         },
+        //         'is_blocked': isBlocked
+        //     }
+        // }));
+        const [poster, isBlocked] = await Promise.all([
+            userService.findUserById(newComment.author_id),
+            friendService.isBlock(post.author, newComment.author_id)
+        ]);
+        const commentDetails = {
+            'id': newComment._id,
+            'comment': newComment.comment,
+            'poster': {
+                'id': poster._id,
+                'username': poster.name,
+                'avatar': env.app.url+(poster.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+            },
+            'created': newComment.created_at,
+            'is_blocked': isBlocked
+        }
 
-        response.sendData(res, response.CODE.OK, commentsDetails);
+        response.sendData(res, response.CODE.OK, commentDetails);
     } catch (error) {
         response.sendError(res, error);
     }

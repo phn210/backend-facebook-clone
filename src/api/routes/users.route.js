@@ -21,7 +21,7 @@ const UploadMiddleware = require('../middlewares/upload.middleware');
  *           type: boolean
  *         is_blocked:
  *           type: boolean
- *         name:
+ *         username:
  *           type: string
  *         described:
  *           type: string
