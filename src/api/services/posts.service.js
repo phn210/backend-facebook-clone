@@ -20,11 +20,11 @@ async function findOnePost(post_id) {
 async function getUsersPosts(users_id, last_id=0, index=0, count=20) {
     if (count) {
         return await Post.find({ 'author': { $in: users_id } })
-                    .sort('-sorted_at')
+                    .sort('-created_at')
                     .skip(last_id+index*count)
                     .limit(count);
     } else {
-        return await Post.find({ 'author': { $in: users_id } }).sort('-sorted_at');
+        return await Post.find({ 'author': { $in: users_id } }).sort('-created_at');
     }
 }
 
@@ -45,7 +45,7 @@ async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
 }
 
 async function getAllPosts() {
-    return await Post.find().sort('-sorted_at');
+    return await Post.find().sort('-created_at');
 }
 
 async function createPost(post) {
@@ -143,11 +143,11 @@ async function getPostLikes(post_id) {
 async function getPostComments(post_id, index=0, count=20) {
     if (count) {
         return await Comment.find({ 'post_id': post_id })
-                    .sort('-sorted_at')
+                    .sort('-created_at')
                     .skip(index*count)
                     .limit(count);
     } else {
-        return await Comment.find({ 'post_id': post_id }).sort('-sorted_at');
+        return await Comment.find({ 'post_id': post_id }).sort('-created_at');
     }
 }
 
