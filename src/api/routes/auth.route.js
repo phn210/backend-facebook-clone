@@ -233,6 +233,9 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *               avatar:
  *                 type: string
  *                 format: binary
+ *               cover:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       '200':
  *         description:
