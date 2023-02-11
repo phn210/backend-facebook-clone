@@ -262,7 +262,7 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
 router.post('/change_info_after_signup', UploadMiddleware.upload(), AuthController.changeInfoAfterSignUp);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/change_password:
  *   post:
  *     summary: 

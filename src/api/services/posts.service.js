@@ -41,10 +41,9 @@ async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
     const allUsers = (await userService.getAllUsers()).map(user => user._id.toString());
     const blockers = (await friendService.getBlockers(user_id)).map(user => user._id.toString());
     const allowed = allUsers.filter(user => (!userFriends.includes(user) && !blockers.includes(user)));
-
     const new_last_id =  last_id > posts.length ? last_id - posts.length : 0;
     const new_index = (index - Math.floor(friendsPosts.length/count)) < 0 ? 0 : (index - Math.floor(friendsPosts.length/count));
-    posts.push(await getUsersPosts(allowed, new_last_id, new_index, count - posts.length));
+    posts = [...posts, ...(await getUsersPosts(allowed, new_last_id, new_index, count - posts.length))];
     return posts;
 }
 
