@@ -126,7 +126,7 @@ async function changeInfoAfterSignUp(req, res, next) {
         const userInfo = {
             phone_number: decoded_token.payload.user,
             name: req.body.username ?? 'John Doe',
-            avatar: req.files?.avatar[0]
+            avatar: req.files.avatar ? req.files.avatar[0] : null
         }
         const user = await userService.findUserByPhoneNumber(userInfo.phone_number);
 
@@ -134,10 +134,17 @@ async function changeInfoAfterSignUp(req, res, next) {
             throw ERROR.USER_IS_NOT_VALIDATED;
 
         user.name = userInfo.name;
-        user.avatar_image = new File({
-            filename: userInfo.avatar.filename,
-            url: '/public/uploads/'+userInfo.avatar.filename
-        })
+        if (userInfo.avatar != null) {
+            user.avatar_image = new File({
+                filename: userInfo.avatar.filename,
+                url: '/public/uploads/'+userInfo.avatar.filename
+            })
+        } else {
+            user.avatar_image = new File({
+                filename: 'avatar-default.jpg',
+                url: '/public/assets/img/avatar-default.jpg'
+            })
+        }
 
         const updatedUser = await userService.updateUser(user);
 
@@ -146,7 +153,7 @@ async function changeInfoAfterSignUp(req, res, next) {
             'username': updatedUser.name,
             'phone_number': updatedUser.phone_number,
             'created_at': updatedUser.created_at,
-            'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+            'avatar': env.app.url+updatedUser.avatar_image.url
         })
     } catch (error) {
         response.sendError(res, error);
