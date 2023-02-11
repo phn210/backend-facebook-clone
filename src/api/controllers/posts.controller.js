@@ -28,9 +28,9 @@ async function getListPosts(req, res, next) {
         if (query.user_id == '') {
             posts = await postService.getFeedPosts(user._id, query.last_id, query.index, query.count);
         } else {
-            if(await friendService.isBlock(user_id, user._id))
+            if(await friendService.isBlock(query.user_id, user._id))
                 throw ERROR.NOT_ACCESS;
-            posts = await postService.getUsersPosts([user._id], last_id, index, count);
+            posts = await postService.getUsersPosts([query.user_id], query.last_id, query.index, query.count);
         }
 
         const postsDetails = await Promise.all(posts.map(async (post) => {
