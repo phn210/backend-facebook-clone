@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const friendService = require('../services/friends.service');
 const notificationService = require('../services/notifications.service');
+const userService = require('../services/users.service');
 const Comment = require('../models/Comment');
 const File = require('../models/File');
 const Like = require('../models/Like');
@@ -15,8 +16,6 @@ async function findOnePost(post_id) {
     return post;
 }
 
-// async function getUserPosts(user_id, index=0, count=20) {}
-
 async function getUsersPosts(users_id, last_id=0, index=0, count=20) {
     if (count) {
         return await Post.find({ 'author': { $in: users_id } })
@@ -28,10 +27,6 @@ async function getUsersPosts(users_id, last_id=0, index=0, count=20) {
     }
 }
 
-async function getLatestPosts(index=0, count=20) {
-
-}
-
 async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
     const userFriends = (await friendService.findUserFriends(user_id, 0, 0)).map(
         friend => (friend.user1_id.toString() == user_id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString()
@@ -39,9 +34,18 @@ async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
     userFriends.push(user_id.toString()); // FIXME
 
     const friendsPosts = await getUsersPosts(userFriends, last_id, index, count);
-    // if (friendsPosts.length >= 20) return friendsPosts;
+    let posts = friendsPosts;
+    if (posts.length >= count) {
+        return posts;
+    }
+    const allUsers = (await userService.getAllUsers()).map(user => user._id.toString());
+    const blockers = (await friendService.getBlockers(user_id)).map(user => user._id.toString());
+    const allowed = allUsers.filter(user => (!userFriends.includes(user) && !blockers.includes(user)));
 
-    return friendsPosts; // FIXME
+    const new_last_id =  last_id > posts.length ? last_id - posts.length : 0;
+    const new_index = (index - Math.floor(friendsPosts.length/count)) < 0 ? 0 : (index - Math.floor(friendsPosts.length/count));
+    posts.push(await getUsersPosts(allowed, new_last_id, new_index, count - posts.length));
+    return posts;
 }
 
 async function getAllPosts() {
