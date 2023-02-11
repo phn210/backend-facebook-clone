@@ -80,7 +80,7 @@ async function getUserInfo(req, res, next) {
             'created': user.created_at,
             'description': user.described,
             'avatar': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
-            'cover': user.cover_image?.url ? env.app.url+user.cover_image?.url : '',
+            'cover': env.app.url+(user.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
             'link': user._id,
             'address': user.address ?? '',
             'city': user.city ?? '',
@@ -129,7 +129,7 @@ async function setUserInfo(req, res, next) {
         response.sendData(res, response.CODE.OK, {
             'id': updatedUser._id,
             'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
-            'cover': user.cover_image?.url ? env.app.url+updatedUser.cover_image?.url : '',
+            'cover': env.app.url+(user.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
             'link': updatedUser._id,
             'address': updatedUser.address ?? '',
             'city': updatedUser.city ?? '',
