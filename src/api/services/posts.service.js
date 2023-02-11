@@ -83,6 +83,10 @@ async function deletePost(post) {
     await deletedPost.save();
 }
 
+async function findOneReport(report_id) {
+    return await Report.findById(report_id);
+}
+
 async function isReported(post_id, reporter_id) {
     return !(!(await Report.findOne({
         $and: [ {'post_id': post_id}, {'reporter_id': reporter_id} ]
@@ -102,6 +106,10 @@ async function createReport(report) {
 
     await newReport.save();
     return newReport;
+}
+
+async function findOneLike(like_id) {
+    return await Like.findById(like_id);
 }
 
 async function isLiked(user_id, post_id) {
@@ -125,7 +133,7 @@ async function createLike(user_id, post_id) {
     })
 
     await like.save();
-    return like;
+    return [like, true];
 }
 
 async function deleteLike(user_id, post_id) {
@@ -135,11 +143,15 @@ async function deleteLike(user_id, post_id) {
 
     if (!like) throw ERROR.NO_DATA_OR_END_OF_LIST_DATA;
     await like.remove();
-    return false;
+    return [like, false];
 }
 
 async function getPostLikes(post_id) {
     return await Like.find({ 'post_id': post_id });
+}
+
+async function findOneComment(comment_id) {
+    return await Comment.findById(comment_id);
 }
 
 async function getPostComments(post_id, index=0, count=20) {
@@ -172,10 +184,13 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
+    findOneReport,
     createReport,
+    findOneLike,
     isLiked,
     toggleLike,
     getPostLikes,
+    findOneComment,
     getPostComments,
     createComment
 }

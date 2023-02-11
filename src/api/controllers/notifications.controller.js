@@ -8,15 +8,61 @@ const env = require('../../lib/env');
 
 async function getNotification(req, res, next) {
     try {
-        res.send({'test': 'OK'})
+        const token = req.body.token;
+        if (!jwtService.verify(token))
+            throw ERROR.TOKEN_IS_INVALID;
+        const decoded_token = jwtService.decode(token);
+        const user = await userService.findUserByPhoneNumber(decoded_token.payload.user);
+
+        const query = {
+            index: req.body.index ? Number(req.body.index) : 0,
+            count: req.body.count ? Number(req.body.count) : 20,
+        }
+
+        const notifications = await notificationService.getUserNotifications(user._id, [], query.index, query.count)
+        console.log(notifications)
+        const unread = await notificationService.countUnreadNotifications(user._id);
+
+        const details = await Promise.all(notifications.map(async noti => {
+            const info = await notificationService.getNotificationInfo(noti);
+            return {
+                type: info.type,
+                object_id: info.object_id,
+                title: info.title,
+                notification_id: noti._id,
+                created_at: noti.created_at,
+                avatar: env.app.url+(info.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+                group: info.group,
+                read: noti.read
+            }            
+        }));
+
+        response.sendData(res, response.CODE.OK, {
+            notifications: details,
+            last_update: new Date(),
+            badge: unread
+        });
     } catch (error) {
-        res.status(500).send({'error': 'ERROR'})
+        response.sendError(res, error);
     }
 }
 
 async function setReadNotification(req, res, next) {
     try {
-        response.sendData(res, response.CODE.OK);
+        const token = req.body.token;
+        if (!jwtService.verify(token))
+            throw ERROR.TOKEN_IS_INVALID;
+        const decoded_token = jwtService.decode(token);
+        const user = await userService.findUserByPhoneNumber(decoded_token.payload.user);
+
+        if (!req.body.notification_id) throw ERROR.PARAMETER_IS_NOT_ENOUGH;
+        await notificationService.updateNotification(req.body.notification_id);
+
+        const unread = await notificationService.countUnreadNotifications(user._id);
+        response.sendData(res, response.CODE.OK, {
+            badge: unread,
+            last_update: new Date()
+        });
     } catch (error) {
         response.sendError(res, error);
     }

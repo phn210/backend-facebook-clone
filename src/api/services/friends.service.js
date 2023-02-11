@@ -5,6 +5,10 @@ const Block = require('../models/Block');
 const Friend = require('../models/Friend');
 const FriendRequest = require('../models/FriendRequest');
 
+async function findOneFriend(friend_id) {
+    return await Friend.findById(friend_id);
+}
+
 async function findUserFriends(user_id, index=0, count=20) {
     if (count) {
         return await Friend.find({
@@ -67,6 +71,10 @@ async function deleteFriend(user1_id, user2_id) {
 
     await friend.remove();
     return {};
+}
+
+async function findOneRequest(request_id) {
+    return await FriendRequest.findById(request_id);
 }
 
 async function sentFriendRequest(sender_id, receiver_id) {
@@ -139,6 +147,10 @@ async function getMutualFriends(user1_id, user2_id) {
     return mutualFriends;
 }
 
+async function findOneBlock(block_id) {
+    return await Block.findById(block_id);
+}
+
 async function getBlocks(user_id, index=0, count=20) {
     if (count) {
         return await Block.find({ blocker_id: user_id })
@@ -191,15 +203,18 @@ async function deleteBlock(blocker_id, victim_id) {
 }
 
 module.exports = {
+    findOneFriend,
     findUserFriends,
     isFriend,
     createFriend,
     deleteFriend,
+    findOneRequest,
     getFriendRequests,
     sentFriendRequest,
     setFriendRequest,
     getSuggestedFriends,
     getMutualFriends,
+    findOneBlock,
     getBlocks,
     getBlockers,
     isBlock,
