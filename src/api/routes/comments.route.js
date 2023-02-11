@@ -84,12 +84,6 @@ router.post('/get_comment', CommentController.getComment);
  *               comment:
  *                 type: string
  *                 required: true
- *               index:
- *                 type: string
- *                 required: true
- *               count:
- *                 type: string
- *                 required: true
  *     responses:
  *       '200':
  *         description:

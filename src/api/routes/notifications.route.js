@@ -5,7 +5,7 @@ const NotificationController = require('../controllers/notifications.controller'
 router.get('/test-notification', (req, res) => res.send({'test': 'notification OK'}));
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/get_notification:
  *   post:
  *     summary: Get notification
@@ -43,22 +43,27 @@ router.get('/test-notification', (req, res) => res.send({'test': 'notification O
  *                 data:
  *                   type: object
  *                   properties:
- *                     type:
- *                       type: string
- *                     object_id:
- *                       type: string
- *                     title:
- *                       type: string
- *                     notification_id:
- *                       type: string
- *                     created:
- *                       type: string
- *                     avatar:
- *                       type: string
- *                     group:
- *                       type: string
- *                     read:
- *                       type: string
+ *                     notifications:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           type:
+ *                             type: string
+ *                           object_id:
+ *                             type: string
+ *                           title:
+ *                             type: string
+ *                           notification_id:
+ *                             type: string
+ *                           created:
+ *                             type: string
+ *                           avatar:
+ *                             type: string
+ *                           group:
+ *                             type: string
+ *                           read:
+ *                             type: string
  *                     last_update:
  *                       type: string
  *                     badge:
@@ -67,7 +72,7 @@ router.get('/test-notification', (req, res) => res.send({'test': 'notification O
 router.post('/get_notification', NotificationController.getNotification);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/set_read_notification:
  *   post:
  *     summary: Set read notification

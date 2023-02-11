@@ -18,30 +18,47 @@ async function like(req, res, next) {
             postService.findOnePost(req.body.id)
         ]);
         
-        const like = await postService.toggleLike(user._id, post._id);
-        if (!like) response.sendData(res, response.CODE.OK);
-        // try {
-        //     const friends = await friendService.findUserFriends(user._id, 0, 0);
-        //     await Promise.all([
-        //         notificationService.createNotification({
-        //             user_id: mongoose.Types.ObjectId(post.author),
-        //             type: notification.type,
-        //             read: false,
-        //             related_id: mongoose.Types.ObjectId(like._id)
-        //         }),
-        //         friends.map(async (friend) => {
-        //             return await notificationService.createNotification({
-        //                 user_id: mongoose.Types.ObjectId(notification.user_id),
-        //                 type: notification.type,
-        //                 read: false,
-        //                 related_id: mongoose.Types.ObjectId(notification.related_id)
-        //             })
-        //         })
-        //     ].flat())
-        // } catch (error) {
-
-        // }
-        response.sendData(res, response.CODE.OK, { 'like': like });
+        const [like, isLike] = await postService.toggleLike(user._id, post._id);
+        try {
+            const friends = await friendService.findUserFriends(user._id, 0, 0);
+            if (isLike) {
+                await Promise.all([
+                    notificationService.createNotification({
+                        user_id: post.author,
+                        type: 'LIKE',
+                        read: false,
+                        related_id: like._id
+                    }),
+                    ...friends.map(async (friend) => {
+                        return await notificationService.createNotification({
+                            user_id: friend._id,
+                            type: 'FRIEND_LIKE',
+                            read: false,
+                            related_id: like._id
+                        })
+                    })
+                ].flat());
+            } else {
+                await Promise.all([
+                    notificationService.deleteNotification({
+                        user_id: post.author,
+                        type: 'LIKE',
+                        related_id: like._id
+                    }),
+                    ...friends.map(async (friend) => {
+                        return await notificationService.deleteNotification({
+                            user_id: friend._id,
+                            type: 'FRIEND_LIKE',
+                            related_id: like._id
+                        })
+                    })
+                ].flat());
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        const totalLikes = (await postService.getPostLikes(post._id)).length;
+        response.sendData(res, response.CODE.OK, { 'like': totalLikes });
     } catch (error) {
         response.sendError(res, error);
     }
