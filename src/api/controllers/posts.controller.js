@@ -18,11 +18,21 @@ async function getListPosts(req, res, next) {
 
         const query = {
             last_id: req.body.last_id ?? null,
+            user_id: req.body.user_id ?? '',
             index: req.body.index ? Number(req.body.index) : 0,
             count: req.body.count ? Number(req.body.count) : 20,
         }
         
-        const posts = await postService.getFeedPosts(user._id, query.last_id, query.index, query.count);
+        let posts;
+
+        if (query.user_id == '') {
+            posts = await postService.getFeedPosts(user._id, query.last_id, query.index, query.count);
+        } else {
+            if(await friendService.isBlock(user_id, user._id))
+                throw ERROR.NOT_ACCESS;
+            posts = await postService.getUsersPosts([user._id], last_id, index, count);
+        }
+
         const postsDetails = await Promise.all(posts.map(async (post) => {
             const [likes, comments, isLiked, author, isBlocked] = await Promise.all([
                 postService.getPostLikes(post._id),

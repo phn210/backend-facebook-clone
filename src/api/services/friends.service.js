@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const ERROR = require('../controllers/responses/error');
 const Block = require('../models/Block');
 const Friend = require('../models/Friend');
@@ -148,6 +150,10 @@ async function getBlocks(user_id, index=0, count=20) {
     }
 }
 
+async function getBlockers(user_id) {
+    return await Block.find({ 'victim_id': mongoose.Types.ObjectId(user_id) });
+} 
+
 async function isBlock(blocker_id, victim_id) {
     return !(!(await Block.findOne({
         $and: [ {'blocker_id': blocker_id}, {'victim_id': victim_id} ]
@@ -195,6 +201,7 @@ module.exports = {
     getSuggestedFriends,
     getMutualFriends,
     getBlocks,
+    getBlockers,
     isBlock,
     setBlock
 }

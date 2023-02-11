@@ -65,11 +65,16 @@ async function updateUser(newUser) {
     return user;
 }
 
+async function getAllUsers() {
+    return await User.find({});
+}
+
 module.exports = {
     createUser,
     updateUser,
     hashPassword,
     findUserByPhoneNumber,
     findUserById,
-    checkValidPassword
+    checkValidPassword,
+    getAllUsers
 }

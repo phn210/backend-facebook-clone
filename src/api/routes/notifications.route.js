@@ -110,7 +110,7 @@ router.post('/get_notification', NotificationController.getNotification);
 router.post('/set_read_notification', NotificationController.setReadNotification);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/get_push_settings:
  *   post:
  *     summary: Get list suggested friends
@@ -143,32 +143,28 @@ router.post('/set_read_notification', NotificationController.setReadNotification
  *                   type: object
  *                   properties:
  *                     like_comment:
- *                       type: string
+ *                       type: boolean
  *                     from_friends:
- *                       type: string
+ *                       type: boolean
  *                     requested_friend:
- *                       type: string
+ *                       type: boolean
  *                     suggested_friend:
- *                       type: string
- *                     birthday:
- *                       type: string
- *                     video:
- *                       type: string
+ *                       type: boolean
  *                     report:
- *                       type: string
+ *                       type: boolean
  *                     sound_on:
- *                       type: string
+ *                       type: boolean
  *                     notification_on:
- *                       type: string
+ *                       type: boolean
  *                     vibrant_on:
- *                       type: string
+ *                       type: boolean
  *                     led_on:
- *                       type: string
+ *                       type: boolean
  */
 router.post('/get_push_settings', NotificationController.getPushSettings);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/set_push_settings:
  *   post:
  *     summary: Set list suggested friends
@@ -186,27 +182,23 @@ router.post('/get_push_settings', NotificationController.getPushSettings);
  *                 type: string
  *                 require: trued
  *               like_comment:
- *                 type: string
+ *                 type: boolean
  *               from_friends:
- *                 type: string
+ *                 type: boolean
  *               requested_friend:
- *                 type: string
+ *                 type: boolean
  *               suggested_friend:
- *                 type: string
- *               birthday:
- *                 type: string
- *               video:
- *                 type: string
+ *                 type: boolean
  *               report:
- *                 type: string
+ *                 type: boolean
  *               sound_on:
- *                 type: string
+ *                 type: boolean
  *               notification_on:
- *                 type: string
+ *                 type: boolean
  *               vibrant_on:
- *                 type: string
+ *                 type: boolean
  *               led_on:
- *                 type: string
+ *                 type: boolean
  *     responses:
  *       '200':
  *         description:

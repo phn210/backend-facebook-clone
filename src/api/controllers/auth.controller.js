@@ -126,7 +126,11 @@ async function changeInfoAfterSignUp(req, res, next) {
         const userInfo = {
             phone_number: decoded_token.payload.user,
             name: req.body.username ?? 'John Doe',
+<<<<<<< Updated upstream
             avatar: req.files.avatar ? req.files.avatar[0] : null
+=======
+            avatar: req.files ? req.files.avatar[0] : null
+>>>>>>> Stashed changes
         }
         const user = await userService.findUserByPhoneNumber(userInfo.phone_number);
 
@@ -134,7 +138,11 @@ async function changeInfoAfterSignUp(req, res, next) {
             throw ERROR.USER_IS_NOT_VALIDATED;
 
         user.name = userInfo.name;
+<<<<<<< Updated upstream
         if (userInfo.avatar != null) {
+=======
+        if (!userInfo.avatar) {
+>>>>>>> Stashed changes
             user.avatar_image = new File({
                 filename: userInfo.avatar.filename,
                 url: '/public/uploads/'+userInfo.avatar.filename

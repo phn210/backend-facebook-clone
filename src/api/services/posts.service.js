@@ -122,8 +122,7 @@ async function createLike(user_id, post_id) {
     })
 
     await like.save();
-    console.log(like);
-    return true;
+    return like;
 }
 
 async function deleteLike(user_id, post_id) {
