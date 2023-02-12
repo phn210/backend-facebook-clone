@@ -5,6 +5,7 @@ const userService = require('../services/users.service');
 const jwtService = require('../services/jwt.service');
 const { File } = require('../models/File');
 const env = require('../../lib/env');
+const { sendPushNotification } = require('../services/firebase-messaging.service');
 
 function newVerifyCode() {
     return Math.floor(Math.random()*1000000);
@@ -24,6 +25,10 @@ async function signup(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'verify_code': newUser.verify_code
+        });
+        sendPushNotification(newUser.id, {
+            title: "Verify Code",
+            body: newUser.verify_code,
         });
     } catch (error) {
         response.sendError(res, error);

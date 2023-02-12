@@ -139,6 +139,13 @@ module.exports = {
             message: "Limited access"
         } 
     },
+    FIREBASE_MESSAGING_TOKEN_EXISTED: {
+        statusCode: 200,
+        body: {
+            code: "1013",
+            message: "Firebase messaging token existed"
+        }
+    },
     isUnknownError: (error) => {
         return (!error.statusCode && !error.body && !error.body?.code && !error.body?.message);
     }

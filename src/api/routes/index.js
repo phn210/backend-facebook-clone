@@ -8,7 +8,8 @@ const controllers = [
     require('./notifications.route'),
     require('./posts.route'),
     require('./searches.route'),
-    require('./users.route')
+    require('./users.route'),
+    require('./firebase-messaging-token.route'),
 ];
 
 router.use('/', controllers);

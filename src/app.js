@@ -11,6 +11,12 @@ const env = require('./lib/env');
 const mongoDb = require('./database/mongo');
 const routes = require('./api/routes');
 const response = require('./api/controllers/responses');
+const { initializeApp, applicationDefault } = require('firebase-admin/app');
+const { sendPushNotification } = require('./api/services/firebase-messaging.service');
+
+const firebaseApp = initializeApp({
+    credential: applicationDefault(),
+});
 
 const app = express();
 
