@@ -3,6 +3,7 @@ const response = require('./responses');
 const ERROR = require('../controllers/responses/error');
 const userService = require('../services/users.service');
 const jwtService = require('../services/jwt.service');
+const firebaseService = require('../services/firebase-messaging.service');
 const { File } = require('../models/File');
 const env = require('../../lib/env');
 const { sendPushNotification } = require('../services/firebase-messaging.service');
@@ -16,19 +17,25 @@ async function signup(req, res, next) {
         const user = {
             phone_number: req.body.phone_number,
             password: req.body.password,
-            verify_code: newVerifyCode()
+            verify_code: newVerifyCode(),
+            device_token: req.body.device_token
         }
         if (!(request.isPhoneNumber(user.phone_number)))
             throw ERROR.PARAMETER_VALUE_IS_INVALID;
 
         const newUser = await userService.createUser(user);
 
+        if (user.device_token && user.device_token != '') {
+            await firebaseService.upsertFirebaseToken(newUser._id, user.device_token)
+
+            sendPushNotification(newUser.id, {
+                title: "Verify Code",
+                body: newUser.verify_code,
+            });
+        }
+        
         response.sendData(res, response.CODE.OK, {
             'verify_code': newUser.verify_code
-        });
-        sendPushNotification(newUser.id, {
-            title: "Verify Code",
-            body: newUser.verify_code,
         });
     } catch (error) {
         response.sendError(res, error);
@@ -40,7 +47,7 @@ async function login(req, res, next) {
         const loginInfo = {
             phone_number: req.body.phone_number,
             password: req.body.password,
-            device_id: req.body.device_id
+            device_token: req.body.device_token
         }
         const user = await userService.findUserByPhoneNumber(loginInfo.phone_number);
         

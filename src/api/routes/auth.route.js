@@ -26,6 +26,9 @@ const UploadMiddleware = require('../middlewares/upload.middleware');
  *                 type: string
  *                 required: true
  *                 format: password
+ *               device_token:
+ *                 type: string
+ *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -67,7 +70,7 @@ const UploadMiddleware = require('../middlewares/upload.middleware');
  *               password:
  *                 type: string
  *                 required: true
- *               device_id:
+ *               device_token:
  *                 type: string
  *                 required: true
  *     responses:
