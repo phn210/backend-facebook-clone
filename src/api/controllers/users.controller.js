@@ -107,7 +107,7 @@ async function setUserInfo(req, res, next) {
         const cover = req.files?.cover ? req.files?.cover[0] : null;
 
         Object.assign(user, {
-            name: req.body.user_name ?? user.name,
+            name: req.body.username ?? user.name,
             described: req.body.description ?? user.described,
             address: req.body.address ?? user.address,
             city: req.body.city ?? user.city,
@@ -128,8 +128,9 @@ async function setUserInfo(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'id': updatedUser._id,
+            'username': updatedUser.name,
             'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
-            'cover': env.app.url+(user.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
+            'cover': env.app.url+(updatedUser.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
             'link': updatedUser._id,
             'address': updatedUser.address ?? '',
             'city': updatedUser.city ?? '',

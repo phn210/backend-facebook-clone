@@ -261,6 +261,8 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *                       type: string
  *                     avatar:
  *                       type: string
+ *                     cover:
+ *                       type: string
  */
 router.post('/change_info_after_signup', UploadMiddleware.upload(), AuthController.changeInfoAfterSignUp);
 
