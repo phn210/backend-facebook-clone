@@ -26,7 +26,7 @@ async function search(req, res, next) {
 
         let results, details;
 
-        if (type == 'post') {
+        if (query.type == 'post') {
             results = await searchService.searchPosts(
                 query.user_id,
                 query.keyword,
@@ -35,6 +35,7 @@ async function search(req, res, next) {
                 query.count
             );
 
+            console.log(results);
             details = await Promise.all(results.map(async (post) => {
                 const [likes, comments, isLiked, author, isBlocked] = await Promise.all([
                     postService.getPostLikes(post._id),
@@ -64,7 +65,8 @@ async function search(req, res, next) {
                     }
                 }
             }))
-        } else if (type == 'user') {
+            console.log(details);
+        } else if (query.type == 'user') {
             results = await searchService.searchUsers(
                 query.keyword,
                 searcher._id,
@@ -78,7 +80,7 @@ async function search(req, res, next) {
                 return {
                     'id': user._id,
                     'username': user.name,
-                    'avatar_image': env.app.url+(sender.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+                    'avatar_image': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
                     'same_friends': friends.length
                 }
             }))

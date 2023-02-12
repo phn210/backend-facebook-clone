@@ -58,8 +58,8 @@ async function searchPosts(user_id, keyword, searcher_id, index=0, count=20) {
     if (result.length < count) result = [
         ...result,
         ...minimumKeywordPosts.slice(
-            index*count >= (fullStringPosts.length + fullKeywordPosts.length) ? (index*count - fullStringPosts.length - fullKeywordPosts.length) : 0,
-            index*count >= (fullStringPosts.length + fullKeywordPosts.length) ? ((index+1)*count - fullStringPosts.length  - fullKeywordPosts.length) : (count - result.length)
+            index*count >= minimumKeywordPosts.length ? (index*count - fullStringPosts.length - fullKeywordPosts.length) : 0,
+            index*count >= minimumKeywordPosts.length ? ((index+1)*count - fullStringPosts.length  - fullKeywordPosts.length) : (count - result.length)
         )
     ]
 
@@ -76,17 +76,17 @@ async function searchUsers(keyword, searcher_id, index=0, count=20) {
 
     keyword = removeAccent(keyword);
 
-    const fullStringUsers = users.filter(user => fullStringFilter(removeAccent(user.name), keyword));
+    const fullStringUsers = users.filter(user => fullStringFilter(removeAccent(user.name ?? ''), keyword));
     
     const fullKeywordUsers = users.filter(user => (
-        !fullStringFilter(removeAccent(user.name), keyword) && 
-        fullKeywordFilter(removeAccent(user.name), keyword)
+        !fullStringFilter(removeAccent(user.name ?? ''), keyword) && 
+        fullKeywordFilter(removeAccent(user.name ?? ''), keyword)
     ));
 
     const minimumKeywordUsers = users.filter(user => (
-        !fullStringFilter(removeAccent(user.name), keyword) && 
-        !fullKeywordFilter(removeAccent(user.name), keyword) &&
-        minimumKeywordFilter(removeAccent(user.name), keyword)
+        !fullStringFilter(removeAccent(user.name ?? ''), keyword) && 
+        !fullKeywordFilter(removeAccent(user.name ?? ''), keyword) &&
+        minimumKeywordFilter(removeAccent(user.name ?? ''), keyword)
     ));
 
     let result = fullStringUsers.slice(index*count, (index+1)*count);
