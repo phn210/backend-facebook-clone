@@ -218,6 +218,12 @@ router.post('/get_user_info', UserController.getUserInfo);
  *                   properties:
  *                     id:
  *                       type: string
+ *                     username:
+ *                       type: string
+ *                     created:
+ *                       type: string
+ *                     description:
+ *                       type: string
  *                     avatar:
  *                       type: string
  *                     cover:

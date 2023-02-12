@@ -67,18 +67,21 @@ async function getUserInfo(req, res, next) {
 
         if (user.phone_number == searcher.phone_number) {
             userInfo.is_friend = false;
-            
+            userInfo.is_received_request = false;
+            userInfo.is_requested = false;
         } else {
             userInfo.is_friend = await friendService.isFriend(user._id, searcher._id);
+            userInfo.is_received_request = await friendService.sentFriendRequest(user._id, searcher._id);
+            userInfo.is_requested = await friendService.sentFriendRequest(searcher._id, user._id);
         }
 
         const friends = await friendService.getSuggestedFriends(userInfo.user_id);
 
         response.sendData(res, response.CODE.OK, {
             'id': user._id,
-            'username': user.name,
+            'username': user.name ?? '',
             'created': user.created_at,
-            'description': user.described,
+            'description': user.described ?? '',
             'avatar': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
             'cover': env.app.url+(user.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
             'link': user._id,
@@ -86,7 +89,9 @@ async function getUserInfo(req, res, next) {
             'city': user.city ?? '',
             'country': user.country ?? '',
             'num_friends': friends?.length ?? 0,
-            'is_friend': userInfo.is_friend,  
+            'is_friend': userInfo.is_friend,
+            'is_received_request': userInfo.is_received_request,
+            'is_requested': userInfo.is_requested,
             'online': true                          //FIXME
         });
     } catch (error) {
@@ -129,6 +134,8 @@ async function setUserInfo(req, res, next) {
         response.sendData(res, response.CODE.OK, {
             'id': updatedUser._id,
             'username': updatedUser.name,
+            'created': user.created_at,
+            'description': user.described ?? '',
             'avatar': env.app.url+(updatedUser.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
             'cover': env.app.url+(updatedUser.cover_image?.url ?? '/public/assets/img/cover-default.jpg'),
             'link': updatedUser._id,
@@ -221,8 +228,10 @@ async function getRequestedFriends(req, res, next) {
 
         const requests = await friendService.getFriendRequests(receiver._id, query.index, query.count);
 
-        if (!requests || requests.length == 0)
+        if (!requests || requests.length == 0) {
             response.sendData(res, response.CODE.OK, { 'requests': [] }); 
+            return;
+        }
 
         const requestsDetails = await Promise.all(requests.map(async (_req) => {
             const [sender, friends] = await Promise.all([
