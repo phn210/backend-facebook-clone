@@ -122,7 +122,6 @@ async function checkVerifyCode(req, res, next) {
 
 async function changeInfoAfterSignUp(req, res, next) {
     try {
-        console.log(req.files, req.file)
         const token = req.body.token;
         if (!jwtService.verify(token))
             throw ERROR.TOKEN_IS_INVALID;
@@ -130,24 +129,38 @@ async function changeInfoAfterSignUp(req, res, next) {
         
         const userInfo = {
             phone_number: decoded_token.payload.user,
-            name: req.body.username ?? 'John Doe',
-            avatar: req.files.avatar ? req.files.avatar[0] : null
+            name: req.body.username ?? null,
+            avatar: req.files.avatar ? req.files.avatar[0] : null,
+            cover: req.files.cover ? req.files.cover[0] : null
         }
         const user = await userService.findUserByPhoneNumber(userInfo.phone_number);
 
         if (!user.is_verified)
             throw ERROR.USER_IS_NOT_VALIDATED;
 
-        user.name = userInfo.name;
+        if (userInfo.name != null && userInfo.name != '') user.name = userInfo.name;
+
         if (userInfo.avatar != null) {
             user.avatar_image = new File({
                 filename: userInfo.avatar.filename,
                 url: '/public/uploads/'+userInfo.avatar.filename
             })
-        } else {
+        } else if (!user.avatar_image){
             user.avatar_image = new File({
                 filename: 'avatar-default.jpg',
                 url: '/public/assets/img/avatar-default.jpg'
+            })
+        }
+
+        if (userInfo.cover != null) {
+            user.cover_image = new File({
+                filename: userInfo.cover.filename,
+                url: '/public/uploads/'+userInfo.cover.filename
+            })
+        } else if (!user.cover_image){
+            user.cover_image = new File({
+                filename: 'cover-default.jpg',
+                url: '/public/assets/img/cover-default.jpg'
             })
         }
 
@@ -158,7 +171,8 @@ async function changeInfoAfterSignUp(req, res, next) {
             'username': updatedUser.name,
             'phone_number': updatedUser.phone_number,
             'created_at': updatedUser.created_at,
-            'avatar': env.app.url+updatedUser.avatar_image.url
+            'avatar': env.app.url+updatedUser.avatar_image.url,
+            'cover': env.app.url+updatedUser.cover_image.url
         })
     } catch (error) {
         response.sendError(res, error);

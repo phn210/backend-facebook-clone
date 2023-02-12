@@ -20,48 +20,73 @@ async function search(req, res, next) {
             keyword: req.body.keyword ?? '',
             user_id: req.body.user_id ?? null,
             index: req.body.index ? Number(req.body.index) : 0,
-            count: req.body.count ? Number(req.body.count) : 20
+            count: req.body.count ? Number(req.body.count) : 20,
+            type: req.body.type ?? 'post'
         }
 
-        const results = await searchService.search(
-            query.user_id,
-            query.keyword,
-            searcher._id,
-            query.index,
-            query.count
-        )
+        let results, details;
 
-        const postsDetails = await Promise.all(results.map(async (post) => {
-            const [likes, comments, isLiked, author, isBlocked] = await Promise.all([
-                postService.getPostLikes(post._id),
-                postService.getPostComments(post._id),
-                postService.isLiked(searcher._id, post._id),
-                userService.findUserById(post.author),
-                friendService.isBlock(post.author, searcher._id)
-            ]);
+        if (query.type == 'post') {
+            results = await searchService.searchPosts(
+                query.user_id,
+                query.keyword,
+                searcher._id,
+                query.index,
+                query.count
+            );
 
-            return {
-                'id': post._id,
-                'content': post.content,
-                'image': post.image.map(img => env.app.url+img.url),
-                'video': post.video?.url ? env.app.url+post.video?.url : '',
-                'created': post.created_at,
-                'like': likes?.length ?? 0,                      
-                'comment': comments?.length ?? 0,                   
-                'is_liked': isLiked ?? false,
-                'is_blocked': isBlocked ?? false,
-                'can_comment': !isBlocked ?? true,
-                'can_edit': !isBlocked ?? true,
-                'status': post.status,
-                'author': {
-                    'id': author._id,
-                    'username': author.name,
-                    'avatar': env.app.url+(author.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+            console.log(results);
+            details = await Promise.all(results.map(async (post) => {
+                const [likes, comments, isLiked, author, isBlocked] = await Promise.all([
+                    postService.getPostLikes(post._id),
+                    postService.getPostComments(post._id),
+                    postService.isLiked(searcher._id, post._id),
+                    userService.findUserById(post.author),
+                    friendService.isBlock(post.author, searcher._id)
+                ]);
+    
+                return {
+                    'id': post._id,
+                    'content': post.content,
+                    'image': post.image.map(img => env.app.url+img.url),
+                    'video': post.video?.url ? env.app.url+post.video?.url : '',
+                    'created': post.created_at,
+                    'like': likes?.length ?? 0,                      
+                    'comment': comments?.length ?? 0,                   
+                    'is_liked': isLiked ?? false,
+                    'is_blocked': isBlocked ?? false,
+                    'can_comment': !isBlocked ?? true,
+                    'can_edit': !isBlocked ?? true,
+                    'status': post.status,
+                    'author': {
+                        'id': author._id,
+                        'username': author.name,
+                        'avatar': env.app.url+(author.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
+                    }
                 }
-            }
-        }))
+            }))
+            console.log(details);
+        } else if (query.type == 'user') {
+            results = await searchService.searchUsers(
+                query.keyword,
+                searcher._id,
+                query.index,
+                query.count
+            );
 
-        response.sendData(res, response.CODE.OK, postsDetails);
+            details = await Promise.all(results.map(async (user) => {
+                const friends = await friendService.getMutualFriends(user._id, searcher._id)
+    
+                return {
+                    'id': user._id,
+                    'username': user.name,
+                    'avatar_image': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+                    'same_friends': friends.length
+                }
+            }))
+        } else throw ERROR.PARAMETER_VALUE_IS_INVALID;
+
+        response.sendData(res, response.CODE.OK, details);
     } catch (error) {
         response.sendError(res, error);
     }

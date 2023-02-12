@@ -66,7 +66,7 @@ async function updateUser(newUser) {
 }
 
 async function getAllUsers() {
-    return await User.find({});
+    return await User.find({}).sort('created_at');
 }
 
 module.exports = {

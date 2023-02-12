@@ -18,12 +18,12 @@ async function findOnePost(post_id) {
 
 async function getUsersPosts(users_id, last_id=0, index=0, count=20) {
     if (count) {
-        return await Post.find({ 'author': { $in: users_id } })
+        return await Post.find({ $and: [ {'author': { $in: users_id }}, {'is_deleted': false}] })
                     .sort('-created_at')
                     .skip(last_id+index*count)
                     .limit(count);
     } else {
-        return await Post.find({ 'author': { $in: users_id } }).sort('-created_at');
+        return await Post.find({ $and: [ {'author': { $in: users_id }}, {'is_deleted': false}] }).sort('-created_at');
     }
 }
 
@@ -48,7 +48,7 @@ async function getFeedPosts(user_id, last_id=0, index=0, count=20) {
 }
 
 async function getAllPosts() {
-    return await Post.find().sort('-created_at');
+    return await Post.find({'is_deleted': false}).sort('-created_at');
 }
 
 async function createPost(post) {
