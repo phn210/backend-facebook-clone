@@ -3,18 +3,20 @@ const UserFirebaseMessagingToken = require("../models/UserFirebaseMessagingToken
 const userService = require('../services/users.service');
 const env = require('../../lib/env');
 
-async function sendPushNotification(user_id, { title, body }) {
+async function sendPushNotification(user_id, { title, body, data }) {
 	const tokens = await UserFirebaseMessagingToken.find({ user_id: user_id });
 	const messages = tokens.map(x => {
 		return {
-		token: x.token,
-		notification: {
-			title: title,
-			body: body,
-			imageUrl: env.app.url+env.app.logo
-		}
+			token: x.token,
+			notification: {
+				title: title,
+				body: body,
+				imageUrl: `${env.app.url}${env.app.logo}`
+			},
+			data: data
 		};
-	})
+	});
+
 	if (!messages || messages.length == 0) return;
 	const batchResponse = await messaging().sendAll(messages);
 	return batchResponse;

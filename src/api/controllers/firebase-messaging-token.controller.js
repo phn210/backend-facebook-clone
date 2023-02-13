@@ -5,6 +5,7 @@ const firebaseService = require('../services/firebase-messaging.service');
 const response = require('./responses');
 const UserFirebaseMessagingToken = require('../models/UserFirebaseMessagingToken');
 const ERROR = require('./responses/error');
+const env = require('../../lib/env');
 
 async function upsertToken(req, res, next) {
   try {
@@ -30,12 +31,54 @@ async function upsertToken(req, res, next) {
 async function testPushNoti(req, res, next) {
   try {
     const fcmToken = req.body.fcm_token;
+    const type = req.body.type ?? 'NONE';
     const existed = await UserFirebaseMessagingToken.findOne({ 'token': fcmToken });
-    console.log(existed);
+    
+    const info = ((_type) => {
+      switch (_type) {
+        case 'POST': {
+          return {
+            type: 'POST',
+            object_id: '63e83f924348c2d239c4899c',
+            title: 'Forward to this post',
+            group: 1
+          };
+        }
+        case 'PROFILE': {
+          return {
+            type: 'PROFILE',
+            object_id: '63d93f2659ffb0d390d8d04a',
+            title: 'Forward to this profile',
+            group: 1
+          };
+        }
+        case 'NONE': {
+          return {
+            type: 'NONE',
+            object_id: '',
+            title: 'Do nothing',
+            group: 0
+          };
+        }
+      }
+    })(type);
+
+    console.log(info);
+
     if (existed) {
       firebaseService.sendPushNotification(existed.user_id, {
-        title: "Test notification",
-        body: "Hello",
+        title: 'IT4788 Facebook',
+        body: 'This is a test notification',
+        data: {
+          type: info.type.toString(),
+          object_id: info.object_id.toString(),
+          title: info.title.toString(),
+          notification_id: '',
+          created_at: new Date().toString(),
+          avatar: `${env.app.url}${'/public/assets/img/avatar-default.jpg'}`.toString(),
+          group: info.group.toString(),
+          read: false.toString()
+        }
       })
       response.sendData(res, response.CODE.OK);
       return;
@@ -43,9 +86,22 @@ async function testPushNoti(req, res, next) {
     const newId = new mongoose.Types.ObjectId()
     const doc = new UserFirebaseMessagingToken({ user_id: newId, token: fcmToken });
     await doc.save();
+
+    
+
     firebaseService.sendPushNotification(newId, {
-      title: "Test notification",
-      body: "Hello",
+      title: 'IT4788 Facebook',
+      body: 'This is a test notification',
+      data: {
+        type: info.type,
+        object_id: info.object_id,
+        title: info.title,
+        notification_id: '',
+        created_at: new Date(),
+        avatar: `${env.app.url}${'/public/assets/img/avatar-default.jpg'}`,
+        group: info.group,
+        read: false
+      }
     })
     response.sendData(res, response.CODE.OK);
   } catch (error) {

@@ -31,6 +31,8 @@ const SearchController = require('../controllers/searches.controller');
  *               count:
  *                 type: string
  *                 required: true
+ *               type:
+ *                 type: string
  *     responses:
  *       '200':
  *         description:

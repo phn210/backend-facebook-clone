@@ -65,6 +65,8 @@ router.post('/upsert_firebase_messaging_token', FirebaseMessagingTokenController
  *             properties:
  *               fcm_token:
  *                 type: string
+ *               type:
+ *                 type: string
  *     responses:
  *       '200':
  *         description:
