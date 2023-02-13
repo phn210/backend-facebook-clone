@@ -1,11 +1,11 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const ChatController = require('../controllers/chats.controller');
+const ChatController = require("../controllers/chats.controller");
 
-router.get('/test-chat', (req, res) => res.send({'test': 'chat OK'}));
+router.get("/test-chat", (req, res) => res.send({ test: "chat OK" }));
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/get_conversation:
  *   post:
  *     summary: Get a conversation
@@ -48,32 +48,34 @@ router.get('/test-chat', (req, res) => res.send({'test': 'chat OK'}));
  *                   type: object
  *                   properties:
  *                     conversation:
- *                       type: object
- *                       properties:
- *                         message:
- *                           type: string
- *                         message_id:
- *                           type: string
- *                         unread:
- *                           type: string
- *                         created:
- *                           type: string
- *                         sender:
- *                           type: object
- *                           properties:
- *                             id:
- *                               type: string
- *                             username:
- *                               type: string
- *                             avatar:
- *                               type: string
- *                     is_blocked:
- *                       type: string
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           message:
+ *                             type: string
+ *                           message_id:
+ *                             type: string
+ *                           unread:
+ *                             type: string
+ *                           created:
+ *                             type: string
+ *                           sender:
+ *                             type: object
+ *                             properties:
+ *                               id:
+ *                                 type: string
+ *                               username:
+ *                                 type: string
+ *                               avatar:
+ *                                 type: string
+ *                           is_blocked:
+ *                             type: string
  */
-router.post('/get_conversation', ChatController.getConversation);
+router.post("/get_conversation", ChatController.getConversation);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/get_list_conversation:
  *   post:
  *     summary: Get list conversations
@@ -109,7 +111,7 @@ router.post('/get_conversation', ChatController.getConversation);
  *                 message:
  *                   type: string
  *                 data:
- *                   type: array
+ *                   type: object
  *                   properties:
  *                     conversations:
  *                       type: array
@@ -139,7 +141,7 @@ router.post('/get_conversation', ChatController.getConversation);
  *                     num_new_messages:
  *                       type: string
  */
-router.post('/get_list_conversation', ChatController.getListConversation);
+router.post("/get_list_conversation", ChatController.getListConversation);
 
 /**
  * swagger // FIXME
@@ -178,7 +180,7 @@ router.post('/get_list_conversation', ChatController.getListConversation);
  *                 data:
  *                   type: array
  */
-router.post('/delete_conversation', ChatController.deleteConversation);
+router.post("/delete_conversation", ChatController.deleteConversation);
 
 /**
  * swagger // FIXME
@@ -217,7 +219,7 @@ router.post('/delete_conversation', ChatController.deleteConversation);
  *                 data:
  *                   type: array
  */
-router.post('/set_read_message', ChatController.setReadMessage);
+router.post("/set_read_message", ChatController.setReadMessage);
 
 /**
  * swagger // FIXME
@@ -257,6 +259,6 @@ router.post('/set_read_message', ChatController.setReadMessage);
  *                 message:
  *                   type: string
  */
-router.post('/delete_message', ChatController.deleteMessage);
+router.post("/delete_message", ChatController.deleteMessage);
 
 module.exports = router;
