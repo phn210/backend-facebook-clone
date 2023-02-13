@@ -41,7 +41,7 @@ router.get('/test-like', (req, res) => res.send({'test': 'like OK'}))
  *                   type: object
  *                   properties:
  *                     like:
- *                       type: string
+ *                       type: boolean
  */
 router.post('/like', LikeController.like);
 

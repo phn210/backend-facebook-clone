@@ -1,8 +1,7 @@
 const router = require('express').Router();
 
 const PostController = require('../controllers/posts.controller');
-
-router.get('/test-post', (req, res) => res.send({'test': 'post OK'}))
+const UploadMiddleware = require('../middlewares/upload.middleware');
 
 /**
  * @swagger
@@ -46,32 +45,41 @@ router.get('/test-post', (req, res) => res.send({'test': 'post OK'}))
  *                     properties:
  *                       id:
  *                         type: string
- *                       name:
+ *                       content:
  *                         type: string
  *                       image:
  *                         type: array
  *                         items:
  *                           type: string
- *                           format: binary
  *                       video:
- *                         type: object
- *                         properties:
- *                           url:
- *                             type: string
- *                           thumb:
- *                             type: string
- *                       described:
  *                         type: string
  *                       created:
  *                         type: string
  *                       like:
- *                         type: string
+ *                         type: integer
  *                       comment:
- *                         type: string
+ *                         type: integer
  *                       is_liked:
- *                         type: string
+ *                         type: boolean
  *                       is_blocked:
+ *                         type: boolean
+ *                       can_comment:
+ *                         type: boolean
+ *                       can_edit:
+ *                         type: boolean
+ *                       status:
  *                         type: string
+ *                       author:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                           username:
+ *                             type: string
+ *                           avatar:
+ *                             type: string
+ *                           online:
+ *                             type: string
  */
 router.post('/get_list_posts', PostController.getListPosts);
 
@@ -113,7 +121,9 @@ router.post('/get_list_posts', PostController.getListPosts);
  *                   properties:
  *                     id:
  *                       type: string
- *                     describe:
+ *                     content:
+ *                       type: string
+ *                     status:
  *                       type: string
  *                     created:
  *                       type: string
@@ -124,6 +134,23 @@ router.post('/get_list_posts', PostController.getListPosts);
  *                     comment:
  *                       type: string
  *                     is_liked:
+ *                       type: string
+ *                     image:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                     video:
+ *                       type: string
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         username:
+ *                           type: string
+ *                         avatar:
+ *                           type: string
+ *                     is_blocked:
  *                       type: string
  */
 router.post('/get_post', PostController.getPost);
@@ -175,10 +202,39 @@ router.post('/get_post', PostController.getPost);
  *                   properties:
  *                     id:
  *                       type: string
- *                     url:
+ *                     content:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                     created:
+ *                       type: string
+ *                     modified:
+ *                       type: string
+ *                     like:
+ *                       type: string
+ *                     comment:
+ *                       type: string
+ *                     is_liked:
+ *                       type: string
+ *                     image:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                     video:
+ *                       type: string
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         username:
+ *                           type: string
+ *                         avatar:
+ *                           type: string
+ *                     is_blocked:
  *                       type: string
  */
-router.post('/add_post', PostController.addPost);
+router.post('/add_post', UploadMiddleware.upload(), PostController.addPost);
 
 /**
  * @swagger
@@ -213,21 +269,14 @@ router.post('/add_post', PostController.addPost);
  *               image_del:
  *                 type: array
  *                 items:
- *                   type: string
+ *                   type: integer
  *               image_sort:
  *                 type: array
  *                 items:
- *                   type: string
+ *                   type: integer
  *               video:
  *                 type: string
  *                 format: binary
- *               thumb:
- *                 type: string
- *                 format: binary
- *               auto_block:
- *                 type: boolean
- *               auto_accept:
- *                 type: boolean
  *     responses:
  *       '200':
  *         description:
@@ -241,7 +290,7 @@ router.post('/add_post', PostController.addPost);
  *                 message:
  *                   type: string
  */
-router.post('/edit_post', PostController.editPost);
+router.post('/edit_post', UploadMiddleware.upload(), PostController.editPost);
 
 /**
  * @swagger
@@ -322,7 +371,7 @@ router.post('/delete_post', PostController.deletePost);
 router.post('/report_post', PostController.reportPost);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/check_new_item:
  *   post:
  *     summary: Check new item
@@ -364,7 +413,7 @@ router.post('/report_post', PostController.reportPost);
 router.post('/check_new_item', PostController.checkNewItem);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_list_videos:
  *   post:
  *     summary: Get list videos
@@ -412,7 +461,7 @@ router.post('/check_new_item', PostController.checkNewItem);
  *                         properties:
  *                           id:
  *                             type: string
- *                           name:
+ *                           username:
  *                             type: string
  *                           video:
  *                             type: object

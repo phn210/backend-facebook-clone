@@ -1,8 +1,49 @@
 const router = require('express').Router();
 
 const UserController = require('../controllers/users.controller');
+const UploadMiddleware = require('../middlewares/upload.middleware');
 
-router.get('/test-user', (req, res) => res.send({'test': 'user OK'}));
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       properties:
+ *         phone_number:
+ *           type: string
+ *         register_date:
+ *           type: string
+ *           format: date-time
+ *         password:
+ *           type: string
+ *           writeOnly: true
+ *         is_verified:
+ *           type: boolean
+ *         is_blocked:
+ *           type: boolean
+ *         username:
+ *           type: string
+ *         described:
+ *           type: string
+ *         avatar_image:
+ *           $ref: '#/components/schemas/File'
+ *         cover_image:
+ *           $ref: '#/components/schemas/File'
+ *         address:
+ *           type: string
+ *         city:
+ *           type: string
+ *         country:
+ *           type: string
+ *         link:
+ *           type: string
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ */
 
 /**
  * @swagger
@@ -21,13 +62,13 @@ router.get('/test-user', (req, res) => res.send({'test': 'user OK'}));
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               index:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               count:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               user_id:
  *                 type: string
  *     responses:
@@ -56,12 +97,10 @@ router.get('/test-user', (req, res) => res.send({'test': 'user OK'}));
  *                             type: string
  *                           avatar:
  *                             type: string
- *                           same_friends:
- *                             type: string
+ *                           mutual_friends:
+ *                             type: integer
  *                           created:
  *                             type: string
- *                     total:
- *                       type: string
  */
 router.post('/get_user_friends', UserController.getUserFriends);
 
@@ -109,7 +148,7 @@ router.post('/get_user_friends', UserController.getUserFriends);
  *                       type: string
  *                     avatar:
  *                       type: string
- *                     cover_image:
+ *                     cover:
  *                       type: string
  *                     link:
  *                       type: string
@@ -159,11 +198,9 @@ router.post('/get_user_info', UserController.getUserInfo);
  *                 type: string
  *               country:
  *                 type: string
- *               cover_image:
+ *               cover:
  *                 type: string
  *                 format: binary
- *               link:
- *                 type: string
  *     responses:
  *       '200':
  *         description:
@@ -179,9 +216,17 @@ router.post('/get_user_info', UserController.getUserInfo);
  *                 data:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     created:
+ *                       type: string
+ *                     description:
+ *                       type: string
  *                     avatar:
  *                       type: string
- *                     cover_image:
+ *                     cover:
  *                       type: string
  *                     link:
  *                       type: string
@@ -192,7 +237,7 @@ router.post('/get_user_info', UserController.getUserInfo);
  *                     country:
  *                       type: string
  */
-router.post('/set_user_info', UserController.setUserInfo);
+router.post('/set_user_info', UploadMiddleware.upload(), UserController.setUserInfo);
 
 /**
  * @swagger
@@ -211,13 +256,13 @@ router.post('/set_user_info', UserController.setUserInfo);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               index:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               count:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:
@@ -235,14 +280,14 @@ router.post('/set_user_info', UserController.setUserInfo);
  *                   properties:
  *                     id:
  *                       type: string
- *                     name:
+ *                     username:
  *                       type: string
  *                     avatar:
  *                       type: string
  */
 router.post('/get_list_blocks', UserController.getListBlocks);
 
-/**
+/**`
  * @swagger
  * /it4788/set_block:
  *   post:
@@ -259,13 +304,10 @@ router.post('/get_list_blocks', UserController.getListBlocks);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               user_id:
  *                 type: string
- *                 require: trued
- *               type:
- *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:
@@ -298,13 +340,10 @@ router.post('/set_block', UserController.setBlock);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
- *               index:
+ *                 require: true
+ *               user_id:
  *                 type: string
- *                 require: trued
- *               count:
- *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:
@@ -337,13 +376,13 @@ router.post('/set_accept_friend', UserController.setAcceptFriend);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               index:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               count:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:
@@ -396,10 +435,10 @@ router.post('/get_requested_friends', UserController.getRequestedFriends);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               user_id:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:
@@ -421,7 +460,7 @@ router.post('/get_requested_friends', UserController.getRequestedFriends);
 router.post('/set_request_friend', UserController.setRequestFriend);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/get_list_suggested_friends:
  *   post:
  *     summary: Get list suggested friends
@@ -437,13 +476,13 @@ router.post('/set_request_friend', UserController.setRequestFriend);
  *             properties:
  *               token:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               index:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *               count:
  *                 type: string
- *                 require: trued
+ *                 require: true
  *     responses:
  *       '200':
  *         description:

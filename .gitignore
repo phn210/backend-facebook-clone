@@ -1,3 +1,9 @@
+# Secrets
+secret.*.json
+
+# Uploads
+public/uploads/
+
 # Logs
 logs
 *.log

@@ -3,14 +3,14 @@ const Schema = mongoose.Schema;
 const { FileSchema } = require('./File');
 
 const UserSchema = new Schema({
-    name: { type: String },                                                 // Name on profile
-    phone_number: { type: String, required: true },                          // Phone number
-    date_login: { type: Date },                                              // Latest login timestamp
+    phone_number: { type: String, required: true },                                              // Latest login timestamp
     register_date: { type: Date, default: new Date(), required: true },        // Registered timestamp
     password: { type: String, required: true },                             // Hashed password
-    verify_code: { type: String },                                           // Latest verify code
+    verify_code: { type: String, required: true },
+    last_verify_code_gen: { type: Date, required: true },
     is_verified: { type: Boolean, default: false },                                          // Whether user is verified
     is_blocked: { type: Boolean, default: false },                           // Whether user is blocked ??
+    name: { type: String },                                                 // Name on profile
     described: { type: String },                                            // Profile's description
     avatar_image: FileSchema,                                                // Avatar image
     cover_image: FileSchema,                                                 // Cover image
@@ -18,6 +18,7 @@ const UserSchema = new Schema({
     city: { type: String },                                                 // City
     country: { type: String },                                              // Country
     link: { type: String },                                                 // Profile's link
+    roles: { type: [String] }
     // timeLastRequestGetVerifyCode: { type: Date }
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

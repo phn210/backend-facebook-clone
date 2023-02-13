@@ -8,3 +8,5 @@ exports.FileSchema = new Schema({
     _id: false,
     timestamp: false
 });
+
+exports.File = mongoose.model('File', exports.FileSchema);

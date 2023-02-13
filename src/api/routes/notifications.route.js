@@ -43,22 +43,27 @@ router.get('/test-notification', (req, res) => res.send({'test': 'notification O
  *                 data:
  *                   type: object
  *                   properties:
- *                     type:
- *                       type: string
- *                     object_id:
- *                       type: string
- *                     title:
- *                       type: string
- *                     notification_id:
- *                       type: string
- *                     created:
- *                       type: string
- *                     avatar:
- *                       type: string
- *                     group:
- *                       type: string
- *                     read:
- *                       type: string
+ *                     notifications:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           type:
+ *                             type: string
+ *                           object_id:
+ *                             type: string
+ *                           title:
+ *                             type: string
+ *                           notification_id:
+ *                             type: string
+ *                           created:
+ *                             type: string
+ *                           avatar:
+ *                             type: string
+ *                           group:
+ *                             type: string
+ *                           read:
+ *                             type: string
  *                     last_update:
  *                       type: string
  *                     badge:
@@ -143,27 +148,23 @@ router.post('/set_read_notification', NotificationController.setReadNotification
  *                   type: object
  *                   properties:
  *                     like_comment:
- *                       type: string
+ *                       type: boolean
  *                     from_friends:
- *                       type: string
+ *                       type: boolean
  *                     requested_friend:
- *                       type: string
+ *                       type: boolean
  *                     suggested_friend:
- *                       type: string
- *                     birthday:
- *                       type: string
- *                     video:
- *                       type: string
+ *                       type: boolean
  *                     report:
- *                       type: string
+ *                       type: boolean
  *                     sound_on:
- *                       type: string
+ *                       type: boolean
  *                     notification_on:
- *                       type: string
+ *                       type: boolean
  *                     vibrant_on:
- *                       type: string
+ *                       type: boolean
  *                     led_on:
- *                       type: string
+ *                       type: boolean
  */
 router.post('/get_push_settings', NotificationController.getPushSettings);
 
@@ -186,27 +187,23 @@ router.post('/get_push_settings', NotificationController.getPushSettings);
  *                 type: string
  *                 require: trued
  *               like_comment:
- *                 type: string
+ *                 type: boolean
  *               from_friends:
- *                 type: string
+ *                 type: boolean
  *               requested_friend:
- *                 type: string
+ *                 type: boolean
  *               suggested_friend:
- *                 type: string
- *               birthday:
- *                 type: string
- *               video:
- *                 type: string
+ *                 type: boolean
  *               report:
- *                 type: string
+ *                 type: boolean
  *               sound_on:
- *                 type: string
+ *                 type: boolean
  *               notification_on:
- *                 type: string
+ *                 type: boolean
  *               vibrant_on:
- *                 type: string
+ *                 type: boolean
  *               led_on:
- *                 type: string
+ *                 type: boolean
  *     responses:
  *       '200':
  *         description:
@@ -223,7 +220,7 @@ router.post('/get_push_settings', NotificationController.getPushSettings);
 router.post('/set_push_settings', NotificationController.setPushSettings);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/check_new_version:
  *   post:
  *     summary: Check app new version

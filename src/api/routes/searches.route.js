@@ -2,8 +2,6 @@ const router = require('express').Router();
 
 const SearchController = require('../controllers/searches.controller');
 
-router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
-
 /**
  * @swagger
  * /it4788/search:
@@ -21,6 +19,7 @@ router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               keyword:
  *                 type: string
  *                 required: true
@@ -49,34 +48,46 @@ router.get('/test-search', (req, res) => res.send({'test': 'search OK'}))
  *                   items:
  *                     type: object
  *                     properties:
- *                       id:
- *                         type: string
- *                       image:
- *                         type: string
- *                       video:
- *                         type: object
- *                         properties:
- *                           url:
- *                             type: string
- *                           thumb:
- *                             type: string
- *                       like:
- *                         type: string
- *                       comment:
- *                         type: string
- *                       is_liked:
- *                         type: string
- *                       author:
- *                         type: object
- *                         properties:
- *                           id:
- *                             type: string
- *                           username:
- *                             type: string
- *                           avatar:
- *                             type: string
- *                       described:
- *                         type: string
+ *                       posts:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: string
+ *                             content:
+ *                               type: string
+ *                             image:
+ *                               type: array
+ *                               items:
+ *                                 type: string
+ *                             video:
+ *                               type: string
+ *                             created:
+ *                               type: string
+ *                             like:
+ *                               type: integer
+ *                             comment:
+ *                               type: integer
+ *                             is_liked:
+ *                               type: boolean
+ *                             is_blocked:
+ *                               type: boolean
+ *                             can_comment:
+ *                               type: boolean
+ *                             can_edit:
+ *                               type: boolean
+ *                             status:
+ *                               type: string
+ *                             author:
+ *                               type: object
+ *                               properties:
+ *                                 id:
+ *                                   type: string
+ *                                 username:
+ *                                   type: string
+ *                                 avatar:
+ *                                   type: string
  */
 router.post('/search', SearchController.search);
 

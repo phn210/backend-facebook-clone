@@ -1,15 +1,15 @@
 const router = require('express').Router();
+const multer = require('multer');
 
 const AuthController = require('../controllers/auth.controller');
-
-router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
+const UploadMiddleware = require('../middlewares/upload.middleware');
 
 /**
  * @swagger
- * /it4788/login:
+ * /it4788/signup:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Signup
+ *     description: Signup with new phone number and receive verify code in response (to be updated to SMS) 
  *     tags:
  *       - Auth
  *     requestBody:
@@ -19,10 +19,60 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *           schema:
  *             type: object
  *             properties:
- *               phonenumber:
+ *               phone_number:
  *                 type: string
+ *                 required: true
  *               password:
  *                 type: string
+ *                 required: true
+ *                 format: password
+ *               device_token:
+ *                 type: string
+ *                 required: true
+ *     responses:
+ *       '200':
+ *         description:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     verify_code:
+ *                       type: string
+ */
+ router.post('/signup', AuthController.signup);
+
+/**
+ * @swagger
+ * /it4788/login:
+ *   post:
+ *     summary: Login
+ *     description: Login with a signup phone number, device_id is currently unused
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       description:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone_number:
+ *                 type: string
+ *                 required: true
+ *               password:
+ *                 type: string
+ *                 required: true
+ *               device_token:
+ *                 type: string
+ *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -46,8 +96,7 @@ router.get('/test-auth', (req, res) => res.send({'test': 'auth OK'}));
  *                       type: string
  *                     avatar:
  *                       type: string
- *                     active:
- *                       type: string
+ *                     
  */
 router.post('/login', AuthController.login);
 
@@ -55,8 +104,8 @@ router.post('/login', AuthController.login);
  * @swagger
  * /it4788/logout:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Logout
+ *     description: Don't really do anything :) Remove token in app to logout
  *     tags:
  *       - Auth
  *     requestBody:
@@ -85,48 +134,10 @@ router.post('/logout', AuthController.logout);
 
 /**
  * @swagger
- * /it4788/signup:
- *   post:
- *     summary: 
- *     description: 
- *     tags:
- *       - Auth
- *     requestBody:
- *       description:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               phonenumber:
- *                 type: string
- *               password:
- *                 type: string
- *               uuid:
- *                 type: string
- *     responses:
- *       '200':
- *         description:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: string
- *                 message:
- *                   type: string
- *                 data:
- *                   type: object
- */
-router.post('/signup', AuthController.signup);
-
-/**
- * @swagger
  * /it4788/get_verify_code:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Get new verify code
+ *     description: Generate new verify code if not verified and receive in response (to be updated to SMS)
  *     tags:
  *       - Auth
  *     requestBody:
@@ -136,41 +147,7 @@ router.post('/signup', AuthController.signup);
  *           schema:
  *             type: object
  *             properties:
- *               phonenumber:
- *                 type: string
- *     responses:
- *       '200':
- *         description:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: string
- *                 message:
- *                   type: string
- */
-router.post('/get_verify_code', AuthController.getVerifyCode);
-
-/**
- * @swagger
- * /it4788/check_verify_code:
- *   post:
- *     summary: 
- *     description: 
- *     tags:
- *       - Auth
- *     requestBody:
- *       description:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               phonenumber:
- *                 type: string
- *               code_verify:
+ *               phone_number:
  *                 type: string
  *     responses:
  *       '200':
@@ -187,21 +164,60 @@ router.post('/get_verify_code', AuthController.getVerifyCode);
  *                 data:
  *                   type: object
  *                   properties:
- *                     token:
+ *                     verify_code:
  *                       type: string
+ */
+router.post('/get_verify_code', AuthController.getVerifyCode);
+
+/**
+ * @swagger
+ * /it4788/check_verify_code:
+ *   post:
+ *     summary: Verify user
+ *     description: Submit verify code to verify user
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       description:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone_number:
+ *                 type: string
+ *                 required: true
+ *               verify_code:
+ *                 type: string
+ *                 required: true
+ *     responses:
+ *       '200':
+ *         description:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
  *                     id:
  *                       type: string
- *                     active:
+ *                     is_verified:
  *                       type: string
  */
 router.post('/check_verify_code', AuthController.checkVerifyCode);
 
 /**
  * @swagger
- * /it4788/change_info_after_setup:
+ * /it4788/change_info_after_signup:
  *   post:
- *     summary: 
- *     description: 
+ *     summary: Change info after signup
+ *     description: Update user's info after signup
  *     tags:
  *       - Auth
  *     requestBody:
@@ -213,9 +229,14 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               username:
  *                 type: string
+ *                 required: true
  *               avatar:
+ *                 type: string
+ *                 format: binary
+ *               cover:
  *                 type: string
  *                 format: binary
  *     responses:
@@ -237,14 +258,16 @@ router.post('/check_verify_code', AuthController.checkVerifyCode);
  *                       type: string
  *                     username:
  *                       type: string
- *                     phonenumber:
+ *                     phone_number:
  *                       type: string
  *                     created:
  *                       type: string
  *                     avatar:
  *                       type: string
+ *                     cover:
+ *                       type: string
  */
-router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
+router.post('/change_info_after_signup', UploadMiddleware.upload(), AuthController.changeInfoAfterSignUp);
 
 /**
  * @swagger
@@ -263,11 +286,13 @@ router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
  *             properties:
  *               token:
  *                 type: string
+ *                 required: true
  *               password:
  *                 type: string
+ *                 required: true
  *               new_password:
  *                 type: string
- *                 format: binary
+ *                 required: true
  *     responses:
  *       '200':
  *         description:
@@ -286,7 +311,7 @@ router.post('/change_info_after_signup', AuthController.changeInfoAfterSignUp);
 router.post('/change_password', AuthController.changePassword);
 
 /**
- * @swagger
+ * swagger // FIXME
  * /it4788/set_dev_token:
  *   post:
  *     summary: Set Dev token
