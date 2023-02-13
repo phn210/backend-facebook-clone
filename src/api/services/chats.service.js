@@ -94,7 +94,7 @@ async function getMessage(conversation_id, message_id) {}
 
 async function setReadMessage(conversation_id) {
     const messages = await Message.find({
-        conversation_id: conversation_id,
+        conversation_id: mongoose.Types.ObjectId(conversation_id),
         read: false,
     });
 
@@ -107,7 +107,7 @@ async function setReadMessage(conversation_id) {
 }
 
 async function deleteMessage(conversation_id, message_id) {
-    const message = await Message.find({
+    const message = await Message.findOne({
         conversation_id: conversation_id,
         _id: message_id,
     });

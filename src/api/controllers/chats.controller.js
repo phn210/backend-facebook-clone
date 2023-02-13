@@ -47,7 +47,8 @@ async function getConversation(req, res, next) {
                 ? conversation.user2_id
                 : conversation.user1_id
         );
-        const isBlocked = friendService.isBlock(partner._id, user._id);
+        const isBlocked = await friendService.isBlock(partner._id, user._id);
+
         const conversationDetails = messages.map((message) => {
             let sender = message.sender_id == user._id ? user : partner;
             return {
@@ -60,7 +61,7 @@ async function getConversation(req, res, next) {
                     username: sender.name,
                     avatar:
                         env.app.url +
-                        (author.avatar_image?.url ??
+                        (sender.avatar_image?.url ??
                             "/public/assets/img/avatar-default.jpg"),
                 },
                 is_blocked:
@@ -111,7 +112,7 @@ async function getListConversation(req, res, next) {
                         username: partner.name,
                         avatar:
                             env.app.url +
-                            (author.avatar_image?.url ??
+                            (partner.avatar_image?.url ??
                                 "/public/assets/img/avatar-default.jpg"),
                     },
                     last_message: {
@@ -146,7 +147,7 @@ async function deleteConversation(req, res, next) {
             conversation_id: req.body.conversation_id ?? "",
         };
 
-        if ((query.conversation_id = "")) {
+        if (query.conversation_id == "") {
             const conversation = await chatService.getConversataion(
                 query.partner_id,
                 query.user_id
@@ -176,14 +177,13 @@ async function setReadMessage(req, res, next) {
             conversation_id: req.body.conversation_id ?? "",
         };
 
-        if ((query.conversation_id = "")) {
+        if (query.conversation_id == "") {
             const conversation = await chatService.getConversataion(
                 query.partner_id,
                 query.user_id
             );
             query.conversation_id = conversation._id;
         }
-
         await chatService.setReadMessage(query.conversation_id);
         response.sendData(res, response.CODE.OK);
     } catch (error) {
@@ -206,7 +206,7 @@ async function deleteMessage(req, res, next) {
             message_id: req.body.message_id,
         };
 
-        if ((query.conversation_id = "")) {
+        if (query.conversation_id == "") {
             const conversation = await chatService.getConversataion(
                 query.partner_id,
                 query.user_id
