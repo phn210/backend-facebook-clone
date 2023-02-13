@@ -108,7 +108,7 @@ async function setPushSettings(req, res, next) {
 
         const newSetting = await notificationService.savePushSetting(pushSetting);
 
-        response.sendData(res, response.CODE.OK);
+        response.sendData(res, response.CODE.OK, newSetting);
     } catch (error) {
         response.sendError(res, error);
     }
