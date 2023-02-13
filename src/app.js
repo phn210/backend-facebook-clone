@@ -9,6 +9,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 
 const env = require('./lib/env');
 const mongoDb = require('./database/mongo');
+const sockets = require('./sockets');
 const routes = require('./api/routes');
 const response = require('./api/controllers/responses');
 const { initializeApp, applicationDefault } = require('firebase-admin/app');
@@ -19,15 +20,16 @@ const firebaseApp = initializeApp({
 });
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));;
 app.use(compression());
 app.use(cors());
-app.use(morgan('dev'));
-app.use('/ping', (req, res) => {res.send({'status': 'alive'})});
-app.use(env.app.routePrefix ?? '/', routes);
 app.use('/public', express.static('public'));
+app.use(morgan('dev'));
+app.use(env.app.routePrefix ?? '/', routes);
 
 if (env.swagger.enabled) {
     const options = {
@@ -59,9 +61,11 @@ try {
         console.log('Connected to database');
     })
 
-    app.listen(env.app.port, () => {
+    server.listen(env.app.port, () => {
         console.log('Server is running on port', env.app.port);
     });
+
+    sockets.init(server);
 } catch (error) {
     console.error('Server crash:', error.message);
     process.exit(1);
