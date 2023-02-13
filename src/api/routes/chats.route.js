@@ -144,7 +144,7 @@ router.post("/get_conversation", ChatController.getConversation);
 router.post("/get_list_conversation", ChatController.getListConversation);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/delete_conversation:
  *   post:
  *     summary: Delete a conversation
@@ -183,7 +183,7 @@ router.post("/get_list_conversation", ChatController.getListConversation);
 router.post("/delete_conversation", ChatController.deleteConversation);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/set_read_message:
  *   post:
  *     summary: Set read message
@@ -222,7 +222,7 @@ router.post("/delete_conversation", ChatController.deleteConversation);
 router.post("/set_read_message", ChatController.setReadMessage);
 
 /**
- * swagger // FIXME
+ * @swagger
  * /it4788/delete_message:
  *   post:
  *     summary: Delete a message
