@@ -15,6 +15,7 @@ async function sendPushNotification(user_id, { title, body }) {
 		}
 		};
 	})
+	if (!messages || messages.length == 0) return;
 	const batchResponse = await messaging().sendAll(messages);
 	return batchResponse;
 };

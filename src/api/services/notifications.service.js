@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const ERROR = require('../controllers/responses/error');
 const friendService = require('../services/friends.service');
-const notificationService = require('../services/notifications.service');
+const firebaseService = require('../services/firebase-messaging.service');
 const postService = require('../services/posts.service');
 const userService = require('../services/users.service');
 const Notification = require('../models/Notification');
 const PushSetting = require('../models/PushSetting');
+const env = require('../../lib/env');
 
 async function getUserNotifications(user_id, types=[], index=0, count=20) {
     if (types.length > 0)
@@ -110,6 +111,33 @@ async function getNotificationInfo(notification) {
                 group: 1
             };
         }
+        case ('FRIEND_POST'): {
+            const post = await postService.findOnePost(notification.related_id);
+            const user = await userService.findUserById(post.author);
+
+            return {
+                type: 'POST',
+                object_id: post._id,
+                title: `${user.name ?? 'Your friend'} has a new post.`,
+                avatar: user.avatar_image,
+                group: 1
+            };
+        }
+        case ('REPORT'): {
+            const report = await postService.findOneReport(notification.related_id);
+            const [user, post] = await Promise.all([
+                userService.findUserById(report.reporter_id),
+                postService.findOnePost(report.post_id)
+            ]);
+
+            return {
+                type: 'POST',
+                object_id: post._id,
+                title: `${user.name ?? 'Somebody'} reported your post.`,
+                avatar: user.avatar_image,
+                group: 1
+            };
+        }
         case ('FRIEND_REQUEST'): {
             const request = await friendService.findOneRequest(notification.related_id);
 
@@ -136,12 +164,20 @@ async function getNotificationInfo(notification) {
                 group: 1
             };
         }
-        case ('FRIEND_SUGGESTED'):
-            return 'NONE';
-        case ('BIRTHDAY'):
-            return 'NONE';
-        case ('LOGIN'):
-            return 'NONE';
+        case ('FRIEND_SUGGESTED'): {
+            return {
+                type: 'NONE',
+                title: 'There are new suggested friends for you.',
+                group: 0
+            };
+        }
+        case ('LOGIN'): {
+            return {
+                type: 'LOGIN',
+                title: 'Your account is login on another device.',
+                group: 0
+            };
+        }
         default:
             return null;
     }
@@ -157,6 +193,23 @@ async function createNotification(notification) {
     })
 
     await newNotification.save();
+    
+    const info = getNotificationInfo(newNotification);
+    firebaseService.sendPushNotification(newNotification.user_id, {
+        title: 'IT4788 Facebook',
+        body: info.title,
+        data: {
+            type: info.type,
+            object_id: info.object_id,
+            title: info.title,
+            notification_id: newNotification._id,
+            created_at: newNotification.created_at,
+            avatar: env.app.url+(info.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg'),
+            group: info.group,
+            read: newNotification.read
+        }
+    })
+
     return newNotification;
 }
 

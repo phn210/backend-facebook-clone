@@ -2,6 +2,7 @@ const request = require('./requests');
 const response = require('./responses');
 const friendService = require('../services/friends.service');
 const jwtService = require('../services/jwt.service');
+const notificationService = require('../services/notifications.service');
 const postService = require('../services/posts.service');
 const userService = require('../services/users.service');
 const env = require('../../lib/env');
@@ -147,6 +148,20 @@ async function addPost(req, res, next) {
 
         const newPost = await postService.createPost(post);
 
+        const friends = (await friendService.findUserFriends(author._id, 0, 0))
+        .map(friend => (friend.user1_id.toString() == author._id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString());
+            
+        await Promise.all(
+            friends.map(async (friend) => {
+                return await notificationService.createNotification({
+                    user_id: friend._id,
+                    type: 'FRIEND_POST',
+                    read: false,
+                    related_id: newPost._id
+                })
+            })
+        );
+
         response.sendData(res, response.CODE.OK, {
             'id': newPost._id,
             'content': newPost.content,
@@ -270,7 +285,14 @@ async function reportPost(req, res, next) {
             details: req.body.details ?? 'Reported content'
         }
 
-        await postService.createReport(report);
+        const newReport = await postService.createReport(report);
+
+        await notificationService.createNotification({
+            user_id: post.author,
+            type: 'REPORT',
+            read: false,
+            related_id: newReport._id
+        })
 
         response.sendData(res, response.CODE.OK);
     } catch (error) {

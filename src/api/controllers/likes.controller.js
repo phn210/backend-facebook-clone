@@ -20,7 +20,8 @@ async function like(req, res, next) {
         
         const [like, isLike] = await postService.toggleLike(user._id, post._id);
         try {
-            const friends = await friendService.findUserFriends(user._id, 0, 0);
+            const friends = (await friendService.findUserFriends(user._id, 0, 0))
+            .map(friend => (friend.user1_id.toString() == user._id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString());
             if (isLike) {
                 await Promise.all([
                     notificationService.createNotification({

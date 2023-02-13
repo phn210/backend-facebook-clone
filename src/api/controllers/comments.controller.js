@@ -67,7 +67,8 @@ async function setComment(req, res, next) {
 
         const newComment = await postService.createComment(comment);
         try {
-            const friends = await friendService.findUserFriends(user._id, 0, 0);
+            const friends = (await friendService.findUserFriends(user._id, 0, 0))
+            .map(friend => (friend.user1_id.toString() == user._id.toString()) ? friend.user2_id.toString() : friend.user1_id.toString());
             await Promise.all([
                 notificationService.createNotification({
                     user_id: post.author,

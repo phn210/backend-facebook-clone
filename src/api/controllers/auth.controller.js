@@ -23,19 +23,20 @@ async function signup(req, res, next) {
             throw ERROR.PARAMETER_VALUE_IS_INVALID;
 
         const newUser = await userService.createUser(user);
+        
+        response.sendData(res, response.CODE.OK, {
+            'verify_code': newUser.verify_code
+        });
 
         if (user.device_token && user.device_token != '') {
             await firebaseService.upsertFirebaseToken(newUser._id, user.device_token)
 
             firebaseService.sendPushNotification(newUser.id, {
-                title: "Verify Code",
-                body: newUser.verify_code,
+                title: 'IT4788 Facebook',
+                body: `Your verification code is ${newUser.verify_code}`,
+                data: {'verify_code': newUser.verify_code}
             });
         }
-        
-        response.sendData(res, response.CODE.OK, {
-            'verify_code': newUser.verify_code
-        });
     } catch (error) {
         response.sendError(res, error);
     }
@@ -52,20 +53,23 @@ async function login(req, res, next) {
         
         if (userService.checkValidPassword(user.password, loginInfo.password)) {
             console.log('token',loginInfo.device_token);
-            if (loginInfo.device_token && loginInfo.device_token != '') {
-                await firebaseService.upsertFirebaseToken(user._id, loginInfo.device_token)
-    
-                firebaseService.sendPushNotification(user.id, {
-                    title: "Test notification",
-                    body: "Welcome back",
-                });
-            }
+            
             response.sendData(res, response.CODE.OK, {
                 'id': user._id,
                 'username': user.name ?? '',
                 'token': jwtService.sign(jwtService.generatePayload(user)),
                 'avatar': env.app.url+(user.avatar_image?.url ?? '/public/assets/img/avatar-default.jpg')
             });
+
+            if (loginInfo.device_token && loginInfo.device_token != '') {
+                await firebaseService.upsertFirebaseToken(user._id, loginInfo.device_token)
+    
+                firebaseService.sendPushNotification(user.id, {
+                    title: 'IT4788 Facebook',
+                    body: `Welcome back`,
+                    data: {}
+                });
+            }
         } else {
             response.sendError(res, response.CODE.ERROR.PARAMETER_VALUE_IS_INVALID);
         }
@@ -103,7 +107,13 @@ async function getVerifyCode(req, res, next) {
 
         response.sendData(res, response.CODE.OK, {
             'verify_code': updatedUser.verify_code
-        })
+        });
+
+        firebaseService.sendPushNotification(updatedUser.id, {
+            title: 'IT4788 Facebook',
+            body: `Your verification code is ${updatedUser.verify_code}`,
+            data: {'verify_code': updatedUser.verify_code}
+        });
     } catch (error) {
         response.sendError(res, error);
     }
