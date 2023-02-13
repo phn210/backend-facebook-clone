@@ -95,12 +95,14 @@ sockets.init = function (server) {
                 // Create message
                 const newMessage = await chatService.createMessage(conversation._id, user._id, content);
 
+                // console.log(partner._id);
                 const sockets = await chatService.findActiveSockets(partner._id);
-
+                // console.log(sockets);
                 // Emit message to receiver
                 sockets.map(sk => io.to(sk.socket_id).emit('receive_message', {
-                    message_id,
-                    content: newMessage.content
+                    message_id: newMessage._id,
+                    content: newMessage.content,
+                    created_at: newMessage.created_at
                 }))
 
                 // Emit message_id to sender
@@ -108,7 +110,8 @@ sockets.init = function (server) {
                     action: 'send_message',
                     data: {
                         message_id: newMessage._id,
-                        content: newMessage.content
+                        content: newMessage.content,
+                        created_at: newMessage.created_at
                     }
                 })
                 

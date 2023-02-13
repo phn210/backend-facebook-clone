@@ -63,3 +63,61 @@ Run
 docker-compose up
 ```
 
+## > Rest API Docs
+
+`<host_url>/api-docs`
+
+## > WebSocket Events
+
+### Server Side
+
+### Client Side
+
+#### Publish channels
+
+```
+// Emit in every session
+socket.emit('initiate', {
+    token                    // JWT Token
+}
+```
+```
+// Emit when open a conversation
+socket.emit('join_conversation', {
+    token,                  // JWT Token
+    partner_id              // Partner's Id
+}
+```
+```
+// Emit when send an message
+socket.emit('send_message', {
+    token,                  // JWT Token
+    partner_id,             // Partner's Id
+    content                 // Message's content
+}
+```
+#### Subcribe channels
+
+```
+// Emitted when an action succeeded
+socket.on('action_success', {
+    action,                 // JWT Token
+    data                    // Action's data
+}
+```
+```
+// Emitted when open a conversation
+socket.on('receive_message', {
+    message_id,             // Message's Id
+    content,                // Message's Content
+    created_at              // Timestamp 
+}
+```
+```
+/*
+ * Emitted when a connection is closed by the server
+ * Disconnect socket
+ */
+
+socket.on('disconnect', {})
+```
