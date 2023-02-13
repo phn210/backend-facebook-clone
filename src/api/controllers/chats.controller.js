@@ -134,6 +134,28 @@ async function getListConversation(req, res, next) {
 
 async function deleteConversation(req, res, next) {
     try {
+        const token = req.body.token;
+        if (!jwtService.verify(token)) throw ERROR.TOKEN_IS_INVALID;
+        const decoded_token = jwtService.decode(token);
+        const user = await userService.findUserByPhoneNumber(
+            decoded_token.payload.user
+        );
+        let query = {
+            user_id: user._id,
+            partner_id: req.body.partner_id ?? "",
+            conversation_id: req.body.conversation_id ?? "",
+        };
+
+        if ((query.conversation_id = "")) {
+            const conversation = await chatService.getConversataion(
+                query.partner_id,
+                query.user_id
+            );
+            query.conversation_id = conversation._id;
+        }
+
+        await chatService.deleteConversation(query.conversation_id);
+
         response.sendData(res, response.CODE.OK);
     } catch (error) {
         response.sendError(res, error);
@@ -142,6 +164,27 @@ async function deleteConversation(req, res, next) {
 
 async function setReadMessage(req, res, next) {
     try {
+        const token = req.body.token;
+        if (!jwtService.verify(token)) throw ERROR.TOKEN_IS_INVALID;
+        const decoded_token = jwtService.decode(token);
+        const user = await userService.findUserByPhoneNumber(
+            decoded_token.payload.user
+        );
+        let query = {
+            user_id: user._id,
+            partner_id: req.body.partner_id ?? "",
+            conversation_id: req.body.conversation_id ?? "",
+        };
+
+        if ((query.conversation_id = "")) {
+            const conversation = await chatService.getConversataion(
+                query.partner_id,
+                query.user_id
+            );
+            query.conversation_id = conversation._id;
+        }
+
+        await chatService.setReadMessage(query.conversation_id);
         response.sendData(res, response.CODE.OK);
     } catch (error) {
         response.sendError(res, error);
@@ -150,6 +193,31 @@ async function setReadMessage(req, res, next) {
 
 async function deleteMessage(req, res, next) {
     try {
+        const token = req.body.token;
+        if (!jwtService.verify(token)) throw ERROR.TOKEN_IS_INVALID;
+        const decoded_token = jwtService.decode(token);
+        const user = await userService.findUserByPhoneNumber(
+            decoded_token.payload.user
+        );
+        let query = {
+            user_id: user._id,
+            partner_id: req.body.partner_id ?? "",
+            conversation_id: req.body.conversation_id ?? "",
+            message_id: req.body.message_id,
+        };
+
+        if ((query.conversation_id = "")) {
+            const conversation = await chatService.getConversataion(
+                query.partner_id,
+                query.user_id
+            );
+            query.conversation_id = conversation._id;
+        }
+
+        await chatService.deleteMessage(
+            query.conversation_id,
+            query.message_id
+        );
         response.sendData(res, response.CODE.OK);
     } catch (error) {
         response.sendError(res, error);
