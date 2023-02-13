@@ -26,7 +26,8 @@ const env = {
         host: getOsEnv('APP_HOST'),
         routePrefix: getOsEnv('APP_ROUTE_PREFIX'),
         port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
-        url: process.env.NODE_ENV === 'production' ? `https://${getOsEnv('APP_HOST')}` : `http://${getOsEnv('APP_HOST')}:${getOsEnv('APP_PORT')}`
+        url: process.env.NODE_ENV === 'production' ? `https://${getOsEnv('APP_HOST')}` : `http://${getOsEnv('APP_HOST')}:${getOsEnv('APP_PORT')}`,
+        logo: getOsEnv('APP_ROUTE_PREFIX') ?? '/public/assets/img/app-logo.png'
     },
     db: {
         host: getOsEnvOptional('MONGODB_HOST') ?? 'localhost',

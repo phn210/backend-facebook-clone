@@ -1,8 +1,9 @@
 const { messaging } = require("firebase-admin");
 const UserFirebaseMessagingToken = require("../models/UserFirebaseMessagingToken");
 const userService = require('../services/users.service');
+const env = require('../../lib/env');
 
-async function sendPushNotification(user_id, { title, body, imageUrl }) {
+async function sendPushNotification(user_id, { title, body }) {
 	const tokens = await UserFirebaseMessagingToken.find({ user_id: user_id });
 	const messages = tokens.map(x => {
 		return {
@@ -10,7 +11,7 @@ async function sendPushNotification(user_id, { title, body, imageUrl }) {
 		notification: {
 			title: title,
 			body: body,
-			imageUrl: imageUrl,
+			imageUrl: env.app.url+env.app.logo
 		}
 		};
 	})
@@ -29,4 +30,5 @@ async function upsertFirebaseToken(user_id, fcm_token) {
 
 module.exports = {
   	sendPushNotification,
+	upsertFirebaseToken
 }

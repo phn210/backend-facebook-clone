@@ -6,7 +6,6 @@ const jwtService = require('../services/jwt.service');
 const firebaseService = require('../services/firebase-messaging.service');
 const { File } = require('../models/File');
 const env = require('../../lib/env');
-const { sendPushNotification } = require('../services/firebase-messaging.service');
 
 function newVerifyCode() {
     return Math.floor(Math.random()*1000000);
@@ -28,7 +27,7 @@ async function signup(req, res, next) {
         if (user.device_token && user.device_token != '') {
             await firebaseService.upsertFirebaseToken(newUser._id, user.device_token)
 
-            sendPushNotification(newUser.id, {
+            firebaseService.sendPushNotification(newUser.id, {
                 title: "Verify Code",
                 body: newUser.verify_code,
             });
@@ -52,6 +51,15 @@ async function login(req, res, next) {
         const user = await userService.findUserByPhoneNumber(loginInfo.phone_number);
         
         if (userService.checkValidPassword(user.password, loginInfo.password)) {
+            console.log('token',loginInfo.device_token);
+            if (loginInfo.device_token && loginInfo.device_token != '') {
+                await firebaseService.upsertFirebaseToken(user._id, loginInfo.device_token)
+    
+                firebaseService.sendPushNotification(user.id, {
+                    title: "Test notification",
+                    body: "Welcome back",
+                });
+            }
             response.sendData(res, response.CODE.OK, {
                 'id': user._id,
                 'username': user.name ?? '',
