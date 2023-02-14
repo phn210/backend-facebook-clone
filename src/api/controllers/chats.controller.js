@@ -91,19 +91,18 @@ async function getListConversation(req, res, next) {
             req.body.count ? Number(req.body.count) : 20
         );
 
-        let numUnreadMessages = 0;
         const conversationDetails = await Promise.all(
             conversations.map(async (conversation) => {
-                const [partner, lastMessage] = await Promise.all([
-                    userService.findUserById(
-                        user._id == conversation.user1_id
-                            ? conversation.user2_id
-                            : conversation.user1_id
-                    ),
-                    chatService.getConversationById(conversation._id, 0, 1),
-                ]);
-
-                if (!lastMessage.messages[0].read) numUnreadMessages++;
+                const [partner, lastMessage, numUnreadMessages] =
+                    await Promise.all([
+                        userService.findUserById(
+                            user._id == conversation.user1_id
+                                ? conversation.user2_id
+                                : conversation.user1_id
+                        ),
+                        chatService.getConversationById(conversation._id, 0, 1),
+                        chatService.getUnreadMessagesCount(conversation._id),
+                    ]);
 
                 return {
                     id: conversation._id,
@@ -120,13 +119,13 @@ async function getListConversation(req, res, next) {
                         created: lastMessage.messages[0].created_at,
                         unread: !lastMessage.messages[0].read,
                     },
+                    num_new_messages: numUnreadMessages,
                 };
             })
         );
 
         response.sendData(res, response.CODE.OK, {
             conversations: conversationDetails,
-            num_new_messages: numUnreadMessages,
         });
     } catch (error) {
         response.sendError(res, error);

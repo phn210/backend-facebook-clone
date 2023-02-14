@@ -61,6 +61,15 @@ async function getConversationById(conversation_id, index = 0, count = 20) {
     };
 }
 
+async function getUnreadMessagesCount(conversation_id) {
+    const messages = await Message.find({
+        conversation_id: mongoose.Types.ObjectId(conversation_id),
+        read: false,
+    });
+
+    return messages.length;
+}
+
 async function getListConversation(user_id, index = 0, count = 20) {
     const conversations = await Conversation.find({
         $or: [
@@ -126,4 +135,5 @@ module.exports = {
     getMessage,
     setReadMessage,
     deleteMessage,
+    getUnreadMessagesCount,
 };

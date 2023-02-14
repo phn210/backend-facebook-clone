@@ -138,8 +138,8 @@ router.post("/get_conversation", ChatController.getConversation);
  *                                 type: string
  *                               unread:
  *                                 type: string
- *                     num_new_messages:
- *                       type: string
+ *                           num_new_messages:
+ *                             type: string
  */
 router.post("/get_list_conversation", ChatController.getListConversation);
 
